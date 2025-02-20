@@ -1,0 +1,225 @@
+/* Fonts */
+@font-face {
+  font-family: "Digital";
+  src: url("assets/fonts/Let's\ go\ Digital\ Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "GameStart";
+  src: url("assets/fonts/ka1.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Global */
+:root {
+  /* Color */
+  --color-light-blue: #79b4b7;
+  --color-mid-blue: #5eaaa8;
+  --color-dark-blue: #4e8f8e;
+  --color-white: #fefbf3;
+  --color-beige: #e0d9ca;
+  --color-grey: #9d9d9d;
+  --color-light-orange: #ffd580;
+  --color-peach: #df7861;
+  --color-light-green: #d3e4cd;
+  --color-mid-green: #adc2a9;
+  --color-dark-green: #99a799;
+  --color-brown: #5e454b;
+  --color-dark-brown: #483434;
+  --color-black: #231e23;
+  --color-yellow: #ffe14b;
+  --color-red: #ff0000;
+
+  /* Font Size */
+  --font-large: 48px;
+  --font-medium: 28px;
+  --font-regular: 20px;
+  --font-small: 18px;
+  --font-micro: 14px;
+
+  /* Font Weight */
+  --weight-bold: 700;
+  --weight-semi-bold: 600;
+  --weight-regular: 400;
+
+  /* Font Styles */
+  --font-digitalTime: "Digital", monospace;
+  --font-game: "Jersey 10", serif;
+
+  /* Size */
+  --size-boarder-radius: 4px;
+
+  /* Animation */
+  --animation-duration: 250ms;
+}
+
+/* Universal Tags */
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100vw; /* 화면 크기에 맞춤 */
+  height: 100vh; /* 전체 화면 높이 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+body {
+  font-family: "IBM Plex Sans KR", sans-serif;
+  background-color: var(--color-beige);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*
+  height: 100vh;
+  margin: 0;*/
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-white);
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* Typography */
+h1 {
+  font-size: var(--font-large);
+  font-weight: var(--weight-bold);
+  color: var(--color-dark-brown);
+  margin: 16px 0;
+}
+
+h2 {
+  font-size: var(--font-medium);
+  font-weight: var(--weight-semi-bold);
+  color: var(--color-dark-brown);
+  margin: 8px 0;
+}
+
+h3 {
+  font-size: var(--font-regular);
+  font-weight: var(--weight-regular);
+  color: var(--color-dark-brown);
+  margin: 8px 0;
+}
+
+p {
+  font-size: var(--font-regular);
+  font-weight: var(--weight-regular);
+  color: var(--color-dark-brown);
+  margin: 4px 0;
+}
+
+button {
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.App {
+  background-color: black;
+}
+
+.mobile {
+  width: 100vw;
+  max-width: 430px;
+  height: 100vh;
+  max-height: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: cover;
+  justify-content: center;
+  background-color: grey;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.overlay {
+  background-color: rgba(255, 20, 0, 0.3);
+  width: 70%;
+  margin: 10vh 6vh 70vh;
+  padding: 5vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
+
+.warning {
+  color: white;
+  font-size: 25px;
+  padding: 5 0 2vh;
+}
+
+.date,
+.time {
+  font-family: var(--font-digitalTime);
+  color: var(--color-red);
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.date {
+  font-size: 7vw;
+}
+
+.hoursMinutes {
+  flex-grow: 1;
+  /*width: 120px; /* 고정된 크기 설정 */
+  text-align: right;
+  font-size: 15vw;
+}
+.seconds {
+  margin-left: 10px;
+  font-size: 7vw;
+  flex-grow: 0.5;
+  /*width: 40px; /* 고정된 크기 설정 */
+  text-align: left;
+}
+
+.bug {
+  font-family: var(--font-game);
+  position: absolute;
+  left: 50%;
+  bottom: 5vh; /* 화면 맨 아래에서 5% 위 */
+  transform: translateX(-50%); /* 가로 중앙 정렬 */
+  display: flex;
+  justify-content: center;
+  width: max-content; /* 요소 크기에 맞게 너비 설정 */
+  flex-direction: column;
+}
+
+.bugTitle {
+  color: var(--color-white);
+  font-size: 15vw;
+  -webkit-text-stroke: 2px black;
+  display: inline-block;
+}
+
+.bugName {
+  font-size: 30vw;
+  /*font-weight: bold;*/
+  -webkit-text-stroke: 2px black;
+  margin-top: -15%;
+  color: var(--color-yellow);
+  display: inline-block;
+}
