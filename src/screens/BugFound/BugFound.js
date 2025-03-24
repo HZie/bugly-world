@@ -5,6 +5,7 @@ import backgroundImage from "../../assets/images/urdy.png";
 import "../../styles/global.css";
 import "../../styles/layout.css";
 import "../../styles/typography.css";
+import "../../styles/transition.css";
 import "./bugFound.css";
 
 //sound
@@ -49,7 +50,7 @@ function BugFound({ onNext, audioRef }) {
   };
 
   return (
-    <div className="mobile bug-screen" onClick={handleClick}>
+    <div className="mobile bug-screen background-glitch" onClick={handleClick}>
       <div className="overlay">
         <div className="warning">밀레니엄 버그 발견</div>
         <div className="date">{formattedDate}</div>
