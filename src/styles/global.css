@@ -1,0 +1,90 @@
+/* Fonts */
+@font-face {
+  font-family: "Digital";
+  src: url("../assets/fonts/Let's\ go\ Digital\ Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "GameStart";
+  src: url("../assets/fonts/ka1.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Root Variables */
+:root {
+  /* Colors */
+  --color-light-blue: #79b4b7;
+  --color-mid-blue: #5eaaa8;
+  --color-dark-blue: #4e8f8e;
+  --color-white: #fefbf3;
+  --color-beige: #e0d9ca;
+  --color-grey: #9d9d9d;
+  --color-light-orange: #ffd580;
+  --color-peach: #df7861;
+  --color-light-green: #d3e4cd;
+  --color-mid-green: #adc2a9;
+  --color-dark-green: #99a799;
+  --color-brown: #5e454b;
+  --color-dark-brown: #483434;
+  --color-black: #231e23;
+  --color-yellow: #ffe14b;
+  --color-red: #ff0000;
+
+  /* Font Sizes */
+  --font-large: 48px;
+  --font-medium: 28px;
+  --font-regular: 20px;
+  --font-small: 18px;
+  --font-micro: 14px;
+
+  /* Font Weights */
+  --weight-bold: 700;
+  --weight-semi-bold: 600;
+  --weight-regular: 400;
+
+  /* Font Styles */
+  --font-digitalTime: "Digital", monospace;
+  --font-game: "Jersey 10", serif;
+
+  /* Other */
+  --size-boarder-radius: 4px;
+  --animation-duration: 250ms;
+}
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-beige);
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-white);
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+button {
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}

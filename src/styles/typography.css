@@ -1,0 +1,59 @@
+h1 {
+  font-size: var(--font-large);
+  font-weight: var(--weight-bold);
+  color: var(--color-dark-brown);
+  margin: 16px 0;
+}
+
+h2 {
+  font-size: var(--font-medium);
+  font-weight: var(--weight-semi-bold);
+  color: var(--color-dark-brown);
+  margin: 8px 0;
+}
+
+h3 {
+  font-size: var(--font-regular);
+  font-weight: var(--weight-regular);
+  color: var(--color-dark-brown);
+  margin: 8px 0;
+}
+
+p {
+  font-size: var(--font-regular);
+  font-weight: var(--weight-regular);
+  color: var(--color-dark-brown);
+  margin: 4px 0;
+}
+
+.warning {
+  color: white;
+  font-size: 25px;
+  padding: 5px 0 2vh;
+}
+
+.date,
+.time {
+  font-family: var(--font-digitalTime);
+  color: var(--color-red);
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.date {
+  font-size: 4vh;
+}
+
+.hoursMinutes {
+  flex-grow: 1;
+  text-align: right;
+  font-size: 8vh;
+}
+
+.seconds {
+  margin-left: 10px;
+  font-size: 4vh;
+  flex-grow: 0.5;
+  text-align: left;
+}

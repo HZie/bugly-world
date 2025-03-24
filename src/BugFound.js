@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
-import styles from "./BugFound.module.css";
 import backgroundImage from "./assets/urdy.png";
+
+// styles
+import "./styles/global.css";
+import "./styles/layout.css";
+import "./styles/typography.css";
+import "./styles/bugFound.css";
 
 function BugFound() {
   // 시간 표시
@@ -27,20 +32,20 @@ function BugFound() {
 
   return (
     <div
-      className={styles.mobile}
+      className="mobile"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className={styles.overlay}>
-        <div className={styles.warning}>밀레니엄 버그 발견</div>
-        <div className={styles.date}>{formattedDate}</div>
-        <div className={styles.time}>
-          <span className={styles.hoursMinutes}>{hoursMinutes}</span>
-          <span className={styles.seconds}> {seconds}</span>
+      <div className="overlay">
+        <div className="warning">밀레니엄 버그 발견</div>
+        <div className="date">{formattedDate}</div>
+        <div className="time">
+          <span className="hoursMinutes">{hoursMinutes}</span>
+          <span className="seconds"> {seconds}</span>
         </div>
       </div>
-      <div className={styles.bug}>
-        <span className={styles.bugTitle}>VIRUS</span>
-        <span className={styles.bugName}>URDY</span>
+      <div className="bug">
+        <span className="bugTitle">VIRUS</span>
+        <span className="bugName">URDY</span>
       </div>
     </div>
   );

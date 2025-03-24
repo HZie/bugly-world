@@ -1,0 +1,31 @@
+.App {
+  background-color: black;
+}
+
+.mobile {
+  width: 100vw;
+  max-width: 430px;
+  height: 100vh;
+  max-height: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  background-color: grey;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.overlay {
+  background-color: rgba(255, 20, 0, 0.3);
+  width: 70%;
+  margin: 10vh 6vh 70vh;
+  padding: 2.5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
