@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import backgroundImage from "./assets/urdy.png";
 
 // styles
 import "./styles/global.css";
 import "./styles/layout.css";
 import "./styles/typography.css";
-import "./styles/bugFound.css";
 
-function BugFound() {
+//sound
+import bgm from "./assets/sounds/opening bgm.mp3";
+import start from "./assets/sounds/computer start.mp3";
+
+function BugFound({ onNext }) {
   // 시간 표시
   const [time, setTime] = useState(new Date());
+  // 클릭 여부
+  const [clickedOnce, setClickedOnce] = useState(false);
 
   useEffect(() => {
     // 1초마다 현재 시간 업데이트
@@ -30,9 +35,35 @@ function BugFound() {
   const hoursMinutes = `${timeParts[0]}:${timeParts[1]}`; // HH:MM
   const seconds = timeParts[2]; // ss
 
+  // 소리
+  const audioRef = useRef(null);
+  const se_bgm = new Audio(bgm);
+  const se_start = new Audio(start);
+
+  const handleClick = () => {
+    if (!clickedOnce) {
+      // 첫번째 클릭
+      const se_bgm = new Audio(bgm);
+      se_bgm.loop = true;
+      se_bgm.play();
+      audioRef.current = se_bgm;
+      setClickedOnce(true);
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+
+      const se_start = new Audio(start);
+      se_start.play(se_start);
+      onNext();
+    }
+  };
+
   return (
     <div
       className="mobile"
+      onClick={handleClick}
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="overlay">

@@ -57,3 +57,30 @@ p {
   flex-grow: 0.5;
   text-align: left;
 }
+
+.bug {
+  font-family: var(--font-game);
+  position: absolute;
+  left: 50%;
+  bottom: 5vh;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  width: max-content;
+  flex-direction: column;
+}
+
+.bugTitle {
+  color: var(--color-white);
+  font-size: 8vh;
+  -webkit-text-stroke: 2px black;
+  display: inline-block;
+}
+
+.bugName {
+  font-size: 17vh;
+  -webkit-text-stroke: 2px black;
+  margin-top: -15%;
+  color: var(--color-yellow);
+  display: inline-block;
+}
