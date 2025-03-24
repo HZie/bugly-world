@@ -27,12 +27,18 @@ function BugFound({ onNext, audioRef }) {
   }, []);
 
   // 날짜 포맷: YYYY-MM-DD
-  const formattedDate = time.toISOString().split("T")[0];
+  const year = time.getFullYear();
+  const month = String(time.getMonth() + 1).padStart(2, "0");
+  const day = String(time.getDate()).padStart(2, "0");
+  const formattedDate = `${year}-${month}-${day}`;
 
   // 시간 포맷: HH:MM:ss
-  const timeParts = time.toTimeString().split(" ")[0].split(":");
-  const hoursMinutes = `${timeParts[0]}:${timeParts[1]}`; // HH:MM
-  const seconds = timeParts[2]; // ss
+  const hh = String(time.getHours()).padStart(2, "0");
+  const mm = String(time.getMinutes()).padStart(2, "0");
+  const ss = String(time.getSeconds()).padStart(2, "0");
+
+  const hoursMinutes = `${hh}:${mm}`; // HH:MM
+  const seconds = ss; // ss
 
   // 소리
   const se_start = new Audio(start);
