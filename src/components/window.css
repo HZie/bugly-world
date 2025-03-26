@@ -1,0 +1,59 @@
+/* 부모 컨테이너: 부모 요소 내에서 absolute 위치를 잡을 수 있게 함 */
+.window-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* 창 기본 스타일 */
+.window {
+  position: absolute;
+  width: 80%; /* 창 너비, 필요에 따라 조정 */
+  height: 30%;
+  background-color: #ddd;
+  border: 2px solid black;
+  box-shadow: 4px 4px black;
+  font-family: sans-serif;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 창 헤더 스타일 */
+.window-header {
+  background-color: magenta;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: move; /* 나중에 드래그 가능하게 구현할 경우 유용 */
+  flex-shrink: 0;
+}
+
+.window-title {
+  font-family: var(--font-game);
+}
+
+/* 닫기 버튼 */
+.window-close {
+  background: red;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+
+/* 창 내용 영역 */
+.window-body {
+  padding: 12px;
+  font-size: 14px;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}

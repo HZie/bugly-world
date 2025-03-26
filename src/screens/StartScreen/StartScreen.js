@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import logo from "../../assets/images/uglyworld_logo.png";
 import "./startScreen.css";
 import "../../styles/transition.css";

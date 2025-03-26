@@ -7,6 +7,7 @@ import StartScreen from "./StartScreen/StartScreen";
 
 // styles
 import "../styles/transition.css";
+import VaccineScreen from "./VaccineScreen/VaccineScreen";
 
 function App() {
   const [screen, setScreen] = useState("startScreen");
@@ -30,14 +31,22 @@ function App() {
       break;
     case "computerScreen":
       currentScreen = (
-        <ComputerScreen onNext={() => setScreen("startScreen")} />
+        <ComputerScreen onNext={() => setScreen("vaccineScreen")} />
       );
+      break;
+    case "vaccineScreen":
+      currentScreen = <VaccineScreen onNext={() => setScreen("startScreen")} />;
       break;
     default:
       currentScreen = <div>404</div>;
   }
 
-  return <div>{currentScreen}</div>;
+  return (
+    <div className="mobile">
+      <div className="corner-text">UglyWorld in_BUG</div>
+      {currentScreen}
+    </div>
+  );
 }
 
 export default App;

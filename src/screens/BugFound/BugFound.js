@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef } from "react";
-import backgroundImage from "../../assets/images/urdy.png";
+import { useEffect, useState } from "react";
 
 // styles
 import "../../styles/global.css";
@@ -40,9 +39,6 @@ function BugFound({ onNext, audioRef }) {
   const hoursMinutes = `${hh}:${mm}`; // HH:MM
   const seconds = ss; // ss
 
-  // 소리
-  const se_start = new Audio(start);
-
   const handleClick = () => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -56,7 +52,7 @@ function BugFound({ onNext, audioRef }) {
   };
 
   return (
-    <div className="mobile bug-screen background-glitch" onClick={handleClick}>
+    <div className="bug-screen background-glitch" onClick={handleClick}>
       <div className="overlay">
         <div className="warning">밀레니엄 버그 발견</div>
         <div className="date">{formattedDate}</div>

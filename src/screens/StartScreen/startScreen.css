@@ -1,5 +1,12 @@
 .start-screen {
   background-color: #731ee2;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .logo-wrapper {

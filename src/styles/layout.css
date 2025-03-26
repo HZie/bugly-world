@@ -10,12 +10,13 @@
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  background-color: grey;
+  background-color: black;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   text-align: center;
   overflow: hidden;
+  position: relative;
 }
 
 .overlay {
