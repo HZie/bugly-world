@@ -69,3 +69,19 @@ p {
   margin: 0;
   padding: 0;
 }
+
+.vaccine-alert {
+  font-family: var(--font-game);
+}
+
+.vaccine-alert__start {
+  font-size: 4vh;
+  color: white;
+  -webkit-text-stroke: 1px black;
+}
+
+.vaccine-alert__vaccinate {
+  font-size: 6vh;
+  -webkit-text-stroke: 1px black;
+  color: #63cffa;
+}

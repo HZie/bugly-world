@@ -16,3 +16,7 @@
   margin: auto;
   overflow: hidden;
 }
+
+.start-label.vaccinate-label {
+  font-family: var(--font-game);
+}

@@ -3,6 +3,7 @@ import "../../styles/layout.css";
 import "../../styles/transition.css";
 import "./computerScreen.css";
 import Window from "../../components/Window";
+import Buttons from "../../components/Buttons";
 
 // Sound
 import error from "../../assets/sounds/error sound.mp3";
@@ -22,36 +23,6 @@ function ComputerScreen({ onNext }) {
     return () => clearTimeout(timeout);
   }, []);
 
-  // 창 데이터 배열 (필요한 만큼 추가)
-  const windows = [
-    {
-      title: "UglyWorld in_BUG",
-      content: (
-        <>
-          디버깅 요원이십니까? <br />예 / 아니오
-        </>
-      ),
-    },
-    {
-      title: "UglyWorld in_BUG",
-      content: (
-        <>
-          <div className="start-label">START</div>
-          <div className="vaccinate-label">VACCINATE</div>
-        </>
-      ),
-    },
-    {
-      title: "UglyWorld in_BUG",
-      content: (
-        <>
-          백신 프로그램을 가동합니다. <br />
-          강제종료하지 마세요 (잠금화면 포함)
-        </>
-      ),
-    },
-  ];
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setVisibleCount(visibleCount + 1);
@@ -70,25 +41,77 @@ function ComputerScreen({ onNext }) {
       setVisibleCount(visibleCount + 1);
       setClickDisabled(true);
       se_error.play();
-      // 모든 창이 보이면, 자동으로 하나씩 제거하는 타이머 시작
-      const removeInterval = setInterval(() => {
+
+      // 1) 첫 번째 창만 천천히 제거
+      setTimeout(() => {
         setVisibleCount((prevCount) => {
+          // 혹시 아직 창이 남아있다면 하나 제거
           if (prevCount > 0) {
+            se_error.play();
             return prevCount - 1;
-          } else {
-            clearInterval(removeInterval);
-            // 모든 창이 사라진 후 600ms 딜레이 후 다음 화면 전환
-            setTimeout(() => {
-              const se_shutdown = new Audio(shutdown);
-              se_shutdown.play();
-              onNext && onNext();
-            }, 100);
-            return 0;
           }
+          return 0;
         });
-      }, 1000); // 1초마다 창 하나씩 제거
+
+        // 2) 그 다음부터는 빠른 간격으로 제거
+        const removeInterval = setInterval(() => {
+          setVisibleCount((prevCount) => {
+            if (prevCount > 0) {
+              //se_error.play();
+              return prevCount - 1;
+            } else {
+              clearInterval(removeInterval);
+              // 모든 창이 사라진 후 처리
+              setTimeout(() => {
+                const se_shutdown = new Audio(shutdown);
+                se_shutdown.play();
+                onNext && onNext();
+              }, 300);
+              return 0;
+            }
+          });
+        }, 50); // 빠른 간격 (100ms)
+      }, 1000); // 첫 번째 창 제거는 1초 후 (천천히)
     }
   };
+
+  // 창 데이터 배열 (필요한 만큼 추가)
+  const windows = [
+    {
+      title: "UglyWorld in_BUG",
+      content: (
+        <>
+          <span>요원이십니까?</span>
+          <div>
+            <Buttons onClick={handleClick}>예</Buttons>
+            <Buttons>아니오</Buttons>
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "UglyWorld in_BUG",
+      content: (
+        <>
+          <button className="vaccine-alert" onClick={handleClick}>
+            <div className="vaccine-alert__start">START</div>
+            <div className="vaccine-alert__vaccinate">VACCINATE</div>
+          </button>
+        </>
+      ),
+    },
+    {
+      title: "UglyWorld in_BUG",
+      content: (
+        <>
+          백신 프로그램을 가동합니다. <br />
+          강제종료하지 마세요.
+          <br />
+          (잠금화면 포함)
+        </>
+      ),
+    },
+  ];
 
   const screenRef = useRef(null);
 
@@ -96,12 +119,7 @@ function ComputerScreen({ onNext }) {
     <div className={`mobile computer-screen pre-fade ${fadeIn}`}>
       <div className="screen" ref={screenRef}>
         {windows.slice(0, visibleCount).map((win, index) => (
-          <Window
-            key={index}
-            title={win.title}
-            parentRef={screenRef}
-            onClick={handleClick}
-          >
+          <Window key={index} title={win.title} parentRef={screenRef}>
             {win.content}
           </Window>
         ))}

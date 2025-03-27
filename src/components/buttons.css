@@ -1,0 +1,6 @@
+.window-button {
+  font-size: 1.5vh;
+  border: 1px black solid;
+  box-shadow: 2px black;
+  margin: 10px 2px;
+}

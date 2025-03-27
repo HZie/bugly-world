@@ -21,7 +21,7 @@
 
 /* 창 헤더 스타일 */
 .window-header {
-  background-color: magenta;
+  background-color: #c417fe;
   color: white;
   font-weight: bold;
   display: flex;
@@ -40,19 +40,21 @@
 .window-close {
   background: red;
   color: white;
-  border: none;
+  border: 1px white;
   font-weight: bold;
   cursor: pointer;
   width: 24px;
   height: 24px;
+  box-shadow: 2px 2px black;
 }
 
 /* 창 내용 영역 */
 .window-body {
   padding: 12px;
-  font-size: 14px;
+  font-size: 1.7vh;
   color: black;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   flex: 1;
