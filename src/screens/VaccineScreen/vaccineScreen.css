@@ -6,5 +6,16 @@
   display: flex;
   justify-content: center;
   text-align: center;
+  align-items: center;
   overflow: hidden;
+}
+
+.vaccine__analyze {
+  color: white;
+}
+
+.warning,
+.date,
+.time {
+  color: white;
 }

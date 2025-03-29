@@ -52,7 +52,7 @@ function BugFound({ onNext, audioRef }) {
   };
 
   return (
-    <div className="mobile bug-screen background-glitch" onClick={handleClick}>
+    <div className="bug-screen background-glitch" onClick={handleClick}>
       <div className="overlay">
         <div className="warning">밀레니엄 버그 발견</div>
         <div className="date">{formattedDate}</div>

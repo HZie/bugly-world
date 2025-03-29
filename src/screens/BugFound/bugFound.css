@@ -38,3 +38,8 @@
   color: var(--color-yellow);
   display: inline-block;
 }
+
+.date,
+.time {
+  color: var(--color-red);
+}

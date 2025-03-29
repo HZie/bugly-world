@@ -35,7 +35,6 @@ p {
 .date,
 .time {
   font-family: var(--font-digitalTime);
-  color: var(--color-red);
   display: flex;
   justify-content: center;
   align-items: baseline;
