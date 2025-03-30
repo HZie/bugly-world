@@ -39,7 +39,6 @@
   display: inline-block;
 }
 
-.date,
-.time {
-  color: var(--color-red);
+.bug-screen > .overlay {
+  color: red;
 }
