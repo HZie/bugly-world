@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // screens
 import BugFound from "./BugFound/BugFound";
@@ -12,6 +12,18 @@ import VaccineScreen from "./VaccineScreen/VaccineScreen";
 function App() {
   const [screen, setScreen] = useState("startScreen");
   const audioRef = useRef(null);
+
+  // 저장된 화면 복구
+  useEffect(() => {
+    const savedScreen = localStorage.getItem("lastScreen");
+    if (savedScreen) {
+      setScreen(savedScreen);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("lastScreen", screen);
+  }, [screen]);
 
   let currentScreen;
 
