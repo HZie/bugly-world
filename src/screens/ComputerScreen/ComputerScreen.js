@@ -11,72 +11,16 @@ import shutdown from "../../assets/sounds/shut down.mp3";
 
 function ComputerScreen({ onNext }) {
   const [fadeIn, setFadeIn] = useState("");
-  const [visibleCount, setVisibleCount] = useState(0);
+  // windowIndices: defaultWindows의 인덱스들을 저장 (예: [0, 1, 1, ...])
+  const [windowIndices, setWindowIndices] = useState([]);
   const [clickDisabled, setClickDisabled] = useState(false);
+  const screenRef = useRef(null);
+
   const se_error = new Audio(error);
+  const se_shutdown = new Audio(shutdown);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setFadeIn("fade-in");
-    }, 50);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisibleCount(visibleCount + 1);
-      se_error.play();
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // 클릭할 때마다 한 개씩 창을 표시
-  const handleClick = () => {
-    if (clickDisabled) return;
-    if (visibleCount < windows.length - 1) {
-      setVisibleCount(visibleCount + 1);
-      se_error.play();
-    } else {
-      setVisibleCount(visibleCount + 1);
-      setClickDisabled(true);
-      se_error.play();
-
-      // 1) 첫 번째 창만 천천히 제거
-      setTimeout(() => {
-        setVisibleCount((prevCount) => {
-          // 혹시 아직 창이 남아있다면 하나 제거
-          if (prevCount > 0) {
-            se_error.play();
-            return prevCount - 1;
-          }
-          return 0;
-        });
-
-        // 2) 그 다음부터는 빠른 간격으로 제거
-        const removeInterval = setInterval(() => {
-          setVisibleCount((prevCount) => {
-            if (prevCount > 0) {
-              //se_error.play();
-              return prevCount - 1;
-            } else {
-              clearInterval(removeInterval);
-              // 모든 창이 사라진 후 처리
-              setTimeout(() => {
-                const se_shutdown = new Audio(shutdown);
-                se_shutdown.play();
-                onNext && onNext();
-              }, 300);
-              return 0;
-            }
-          });
-        }, 50); // 빠른 간격 (100ms)
-      }, 1000); // 첫 번째 창 제거는 1초 후 (천천히)
-    }
-  };
-
-  // 창 데이터 배열 (필요한 만큼 추가)
-  const windows = [
+  // 기본 창 목록 (인덱스 기반)
+  const defaultWindows = [
     {
       title: "UglyWorld in_BUG",
       content: (
@@ -86,6 +30,16 @@ function ComputerScreen({ onNext }) {
             <Buttons onClick={handleClick}>예</Buttons>
             <Buttons>아니오</Buttons>
           </div>
+        </>
+      ),
+    },
+    {
+      title: "UglyWorld in_BUG",
+      content: (
+        <>
+          <span>요원 코드를 입력해주세요.</span>
+          <input type="password" />
+          <input type="submit" value="로그인" onClick={handleClick} />
         </>
       ),
     },
@@ -113,16 +67,95 @@ function ComputerScreen({ onNext }) {
     },
   ];
 
-  const screenRef = useRef(null);
+  // 초기 fade-in 효과와 첫 창(인덱스 0) 표시
+  useEffect(() => {
+    const fadeTimeout = setTimeout(() => {
+      setFadeIn("fade-in");
+    }, 50);
+
+    const initTimeout = setTimeout(() => {
+      setWindowIndices([0]); // 첫 창: defaultWindows[0]
+      se_error.play();
+    }, 1000);
+
+    return () => {
+      clearTimeout(fadeTimeout);
+      clearTimeout(initTimeout);
+    };
+  }, []);
+
+  // windowIndices 업데이트 시, 마지막 창(인덱스가 defaultWindows의 마지막)에 도달하면 자동 삭제 시퀀스를 실행
+  useEffect(() => {
+    if (
+      !clickDisabled &&
+      windowIndices.length > 0 &&
+      windowIndices[windowIndices.length - 1] === defaultWindows.length - 1
+    ) {
+      setClickDisabled(true);
+      se_error.play();
+      setTimeout(() => {
+        // 마지막 창부터 하나씩 제거 (배열의 마지막 요소 제거)
+        setWindowIndices((prev) => prev.slice(0, -1));
+        const removalInterval = setInterval(() => {
+          setWindowIndices((prev) => {
+            if (prev.length > 0) {
+              return prev.slice(0, -1);
+            } else {
+              clearInterval(removalInterval);
+              setTimeout(() => {
+                se_shutdown.play();
+                onNext && onNext();
+              }, 300);
+              return [];
+            }
+          });
+        }, 50);
+      }, 1000);
+    }
+  }, [windowIndices, clickDisabled, defaultWindows.length, onNext]);
+
+  // handleClick: "예" 버튼 등에서 호출, 창 추가 (마지막 창에 도달하면 자동 삭제로 전환)
+  function handleClick() {
+    if (clickDisabled) return;
+    const lastIndex = windowIndices[windowIndices.length - 1] ?? -1;
+    if (lastIndex < defaultWindows.length - 1) {
+      setWindowIndices((prev) => [...prev, lastIndex + 1]);
+      se_error.play();
+    }
+  }
+
+  // handleClose: x 버튼 클릭 시 호출. 단, 마지막 창(최상단)에서만 동작하도록 함.
+  function handleClose() {
+    if (clickDisabled) return;
+    se_error.play();
+    if (windowIndices.length > 0) {
+      // 마지막 창의 인덱스를 그대로 추가하여 복제 효과를 줌.
+      const lastIndex = windowIndices[windowIndices.length - 1];
+      setWindowIndices((prev) => [...prev, lastIndex]);
+    }
+  }
 
   return (
     <div className={`mobile computer-screen pre-fade ${fadeIn}`}>
       <div className="screen" ref={screenRef}>
-        {windows.slice(0, visibleCount).map((win, index) => (
-          <Window key={index} title={win.title} parentRef={screenRef}>
-            {win.content}
-          </Window>
-        ))}
+        {windowIndices.map((idx, i) => {
+          const win = defaultWindows[idx];
+          if (!win) return null;
+          const isLast = i === windowIndices.length - 1;
+          return (
+            <Window
+              key={i}
+              title={win.title}
+              parentRef={screenRef}
+              // onClose prop은 가장 마지막 창에서만 활성화됨
+              onClose={isLast ? handleClose : undefined}
+              // active-window 클래스는 CSS에서 별도의 스타일(예: 색 변경)을 줄 수 있음
+              isActive={isLast ? "active" : "inactive"}
+            >
+              {win.content}
+            </Window>
+          );
+        })}
       </div>
     </div>
   );

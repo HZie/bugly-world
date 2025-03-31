@@ -38,7 +38,7 @@
 
 /* 닫기 버튼 */
 .window-close {
-  background: red;
+  background-color: red;
   color: white;
   border: 1px white;
   font-weight: bold;
@@ -58,4 +58,14 @@
   justify-content: center;
   align-items: center;
   flex: 1;
+}
+
+.inactive {
+  pointer-events: none;
+}
+.inactive > .window-header {
+  background-color: #939393;
+}
+.inactive > .window-header > .window-close {
+  background-color: #757575;
 }

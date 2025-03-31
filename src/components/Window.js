@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import "./window.css";
 
-function Window({ parentRef, title, children, onClick }) {
+function Window({
+  parentRef,
+  title,
+  children,
+  onClick,
+  onClose,
+  isActive = "",
+}) {
   const windowRef = useRef(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
 
@@ -30,13 +37,21 @@ function Window({ parentRef, title, children, onClick }) {
   return (
     <div
       ref={windowRef}
-      className="window"
+      className={`window ${isActive}`}
       style={{ top: pos.top, left: pos.left, position: "absolute" }}
       onClick={onClick}
     >
       <div className="window-header">
         <span className="window-title">{title}</span>
-        <button className="window-close">X</button>
+        <button
+          className="window-close"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose && onClose();
+          }}
+        >
+          X
+        </button>
       </div>
       <div className="window-body">{children}</div>
     </div>
