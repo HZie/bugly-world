@@ -47,6 +47,10 @@
   height: 24px;
   box-shadow: 2px 2px black;
 }
+.window-close:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 black;
+}
 
 /* 창 내용 영역 */
 .window-body {

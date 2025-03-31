@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 
+import { useAgent } from "../../contexts/AgentContext";
+
 import "./vaccineScreen.css";
 import "../../styles/global.css";
 import "../../styles/layout.css";
 import "../../styles/typography.css";
 
 function VaccineScreen({ onNext }) {
+  const { agent } = useAgent();
   // 시간 표시
   const [time, setTime] = useState(new Date());
 

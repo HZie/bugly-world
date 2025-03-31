@@ -68,6 +68,11 @@ p {
   font-family: var(--font-game);
 }
 
+.vaccine-alert:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 black;
+}
+
 .vaccine-alert__start {
   font-size: 4vh;
   color: white;

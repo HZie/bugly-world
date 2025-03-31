@@ -1,4 +1,11 @@
 import { useEffect, useState, useRef } from "react";
+
+// 로그인용
+import { useAgent } from "../../contexts/AgentContext";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../firebase";
+import { hashPassword } from "../../utils/hash";
+
 import "../../styles/layout.css";
 import "../../styles/transition.css";
 import "./computerScreen.css";
@@ -8,12 +15,46 @@ import Buttons from "../../components/Buttons";
 // Sound
 import error from "../../assets/sounds/error sound.mp3";
 import shutdown from "../../assets/sounds/shut down.mp3";
+import Submits from "../../components/Submits";
 
 function ComputerScreen({ onNext }) {
   const [fadeIn, setFadeIn] = useState("");
   // windowIndices: defaultWindows의 인덱스들을 저장 (예: [0, 1, 1, ...])
   const [windowIndices, setWindowIndices] = useState([]);
   const [clickDisabled, setClickDisabled] = useState(false);
+
+  //로그인용
+  const { setAgent } = useAgent();
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+
+  async function handleLoginSubmit(e) {
+    e.preventDefault();
+    const hashed = await hashPassword(password);
+
+    const q = query(
+      collection(db, "agents"),
+      where("passwordHash", "==", hashed)
+    );
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      // 로그인 성공
+      const doc = snapshot.docs[0];
+      const data = doc.data();
+      setAgent({
+        id: doc.id,
+        progress: data.progress ?? 0,
+        passwordHash: hashed,
+      });
+      setLoginError("");
+      handleClick();
+    } else {
+      setLoginError("요원코드가 올바르지 않습니다.");
+      handleClose();
+    }
+  }
+
   const screenRef = useRef(null);
 
   const se_error = new Audio(error);
@@ -28,7 +69,7 @@ function ComputerScreen({ onNext }) {
           <span>요원이십니까?</span>
           <div>
             <Buttons onClick={handleClick}>예</Buttons>
-            <Buttons>아니오</Buttons>
+            <Buttons onClick={handleClose}>아니오</Buttons>
           </div>
         </>
       ),
@@ -38,8 +79,19 @@ function ComputerScreen({ onNext }) {
       content: (
         <>
           <span>요원 코드를 입력해주세요.</span>
-          <input type="password" />
-          <input type="submit" value="로그인" onClick={handleClick} />
+          <form onSubmit={handleLoginSubmit}>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+            <Submits value="로그인" />
+          </form>
+          {loginError && (
+            <p style={{ color: "red", fontSize: "1.7vh" }}>{loginError}</p>
+          )}
         </>
       ),
     },

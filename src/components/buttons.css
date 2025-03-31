@@ -1,6 +1,21 @@
 .window-button {
   font-size: 1.5vh;
-  border: 1px black solid;
-  box-shadow: 2px black;
+  color: black;
+  border: 0.5px grey solid;
+  box-shadow: 2px 2px black;
+  margin: 1vh;
+}
+
+.window-submit {
+  font-size: 1.5vh;
+  cursor: pointer;
+  border: 0.5px grey solid;
+  box-shadow: 2px 2px black;
   margin: 10px 2px;
+}
+
+.window-button:active,
+.window-submit:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 black;
 }
