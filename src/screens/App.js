@@ -8,6 +8,7 @@ import StartScreen from "./StartScreen/StartScreen";
 // styles
 import "../styles/transition.css";
 import VaccineScreen from "./VaccineScreen/VaccineScreen";
+import AccessGrantedScreen from "./AccessGrantedScreen/AccessGrantedScreen";
 
 function App() {
   const [screen, setScreen] = useState("startScreen");
@@ -16,7 +17,10 @@ function App() {
   // 저장된 화면 복구
   useEffect(() => {
     const savedScreen = localStorage.getItem("lastScreen");
-    if (savedScreen) {
+    console.log(savedScreen);
+    if (savedScreen == "undefined") {
+      setScreen("startScreen");
+    } else {
       setScreen(savedScreen);
     }
   }, []);
@@ -47,10 +51,18 @@ function App() {
       );
       break;
     case "vaccineScreen":
-      currentScreen = <VaccineScreen onNext={() => setScreen("startScreen")} />;
+      currentScreen = (
+        <VaccineScreen onNext={() => setScreen("accessGrantedScreen")} />
+      );
+      break;
+    case "accessGrantedScreen":
+      currentScreen = (
+        <AccessGrantedScreen onNext={() => setScreen("startScreen")} />
+      );
       break;
     default:
       currentScreen = <div>404</div>;
+      console.log("hello world");
   }
 
   return (

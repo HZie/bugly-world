@@ -37,11 +37,13 @@ p {
 
 .date {
   font-size: 4vh;
+  width: 10ch;
 }
 
 .hoursMinutes {
   flex-grow: 1;
   text-align: right;
+  width: 5ch;
   font-size: 8vh;
 }
 
@@ -49,6 +51,7 @@ p {
   margin-left: 10px;
   font-size: 4vh;
   flex-grow: 0.5;
+  width: 2ch;
   text-align: left;
 }
 
