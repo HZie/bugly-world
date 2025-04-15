@@ -9,6 +9,7 @@ import StartScreen from "./StartScreen/StartScreen";
 import "../styles/transition.css";
 import VaccineScreen from "./VaccineScreen/VaccineScreen";
 import AccessGrantedScreen from "./AccessGrantedScreen/AccessGrantedScreen";
+import EntranceScreen from "./EntranceScreen/EntranceScreen";
 
 function App() {
   const [screen, setScreen] = useState("startScreen");
@@ -18,7 +19,7 @@ function App() {
   useEffect(() => {
     const savedScreen = localStorage.getItem("lastScreen");
     console.log(savedScreen);
-    if (savedScreen == "undefined") {
+    if (savedScreen == "null") {
       setScreen("startScreen");
     } else {
       setScreen(savedScreen);
@@ -52,12 +53,19 @@ function App() {
       break;
     case "vaccineScreen":
       currentScreen = (
-        <VaccineScreen onNext={() => setScreen("accessGrantedScreen")} />
+        <VaccineScreen onNext={() => setScreen("entranceScreen")} />
       );
       break;
+
     case "accessGrantedScreen":
+    /*
       currentScreen = (
-        <AccessGrantedScreen onNext={() => setScreen("startScreen")} />
+        <AccessGrantedScreen onNext={() => setScreen("entranceScreen")} />
+      );
+      break;*/
+    case "entranceScreen":
+      currentScreen = (
+        <EntranceScreen onNext={() => setScreen("startScreen")} />
       );
       break;
     default:

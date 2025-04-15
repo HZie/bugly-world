@@ -11,11 +11,13 @@ const TARGET_TIME = new Date("2000-01-01T00:00:00");
 
 function VaccineScreen({ onNext }) {
   const { agent } = useAgent();
+  console.log(agent);
   // 시간 표시
   const [time, setTime] = useState(new Date());
   // 시간 팍 뜨게 하기
   const [visible, setVisible] = useState(false);
   const [bgOpacity, setBgOpacity] = useState(0);
+  const [accessGranted, setAccessGranted] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,16 +37,15 @@ function VaccineScreen({ onNext }) {
       setTime((prev) => {
         const next = new Date(prev.getTime() - 1000 * frame); // 1초 감소
         if (next <= TARGET_TIME) {
-          //onNext && onNext();
           clearTimeout(timeoutId);
+          setAccessGranted(true);
           return TARGET_TIME;
         }
 
         return next;
       });
-      console.log("hi");
       // 호출 간격 줄이기
-      frame = frame * 1.05;
+      frame = frame * 1.01;
       delay = delay / frame;
       timeoutId = setTimeout(tick, delay);
     };
@@ -57,14 +58,14 @@ function VaccineScreen({ onNext }) {
     if (!visible) return;
 
     const start = Date.now();
-    const fixedDuration = 3500; // 💡 5초 동안 opacity 0 → 1
+    const fixedDuration = 13000; // 💡 5초 동안 opacity 0 → 1
 
     const interval = setInterval(() => {
       const now = Date.now();
       const elapsed = now - start;
-      const progress = Math.min(elapsed / fixedDuration, 0.9);
+      const progress = elapsed / fixedDuration;
 
-      setBgOpacity(progress);
+      setBgOpacity(Math.min(progress, 0.9));
 
       if (progress >= 1) {
         clearInterval(interval);
@@ -119,6 +120,9 @@ function VaccineScreen({ onNext }) {
             <span className="seconds"> {seconds}</span>
           </div>
         </div>
+        {accessGranted && (
+          <div className="access__message">요원에게 권한을 부여합니다.</div>
+        )}
       </div>
     </div>
   );

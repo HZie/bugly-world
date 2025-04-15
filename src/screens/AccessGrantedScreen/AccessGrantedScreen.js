@@ -42,8 +42,8 @@ function AccessGrantScreen({ onNext }) {
           <span className="hoursMinutes">{hoursMinutes}</span>
           <span className="seconds"> {seconds}</span>
         </div>
-        <div className="access__message">요원에게 권한을 부여합니다.`</div>
       </div>
+      <div className="access__message">요원에게 권한을 부여합니다.</div>
     </div>
   );
 }
