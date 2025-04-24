@@ -6,7 +6,7 @@ import "./entranceScreen.css";
 import "../../styles/global.css";
 import "../../styles/layout.css";
 import "../../styles/typography.css";
-import entranceVideo from "../../assets/images/entrance.mp4";
+//import entranceVideo from "../../assets/images/entrance.mp4";
 
 function EntranceScreen({ onNext }) {
   const { agent } = useAgent();
@@ -15,12 +15,14 @@ function EntranceScreen({ onNext }) {
     onNext();
   };
 
+  return;
+  /*
   return (
     <div className="entranceScreen" onClick={handleClick}>
       <video muted autoPlay onEnded={onNext}>
         <source src={entranceVideo} type="video/mp4" />
       </video>
     </div>
-  );
+  );*/
 }
 export default EntranceScreen;

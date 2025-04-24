@@ -13,25 +13,25 @@ function Window({
   const [pos, setPos] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    if (parentRef.current && windowRef.current) {
-      const parentRect = parentRef.current.getBoundingClientRect();
-      const windowRect = windowRef.current.getBoundingClientRect();
+    if (!parentRef?.current || !windowRef.current) return;
 
-      // 안전 여유 (px)
-      const margin = 20;
-      const maxTop = parentRect.height - windowRect.height - margin;
-      const maxLeft = parentRect.width - windowRect.width - margin;
+    const parentRect = parentRef.current.getBoundingClientRect();
+    const windowRect = windowRef.current.getBoundingClientRect();
 
-      // 음수 방지
-      const safeTop = Math.max(0, maxTop);
-      const safeLeft = Math.max(0, maxLeft);
+    // 안전 여유 (px)
+    const margin = 20;
+    const maxTop = parentRect.height - windowRect.height - margin;
+    const maxLeft = parentRect.width - windowRect.width - margin;
 
-      // 랜덤 배치 (부모 안)
-      const randomTop = margin + Math.floor(Math.random() * safeTop);
-      const randomLeft = margin + Math.floor(Math.random() * safeLeft);
+    // 음수 방지
+    const safeTop = Math.max(0, maxTop);
+    const safeLeft = Math.max(0, maxLeft);
 
-      setPos({ top: randomTop, left: randomLeft });
-    }
+    // 랜덤 배치 (부모 안)
+    const randomTop = margin + Math.floor(Math.random() * safeTop);
+    const randomLeft = margin + Math.floor(Math.random() * safeLeft);
+
+    setPos({ top: randomTop, left: randomLeft });
   }, []);
 
   return (

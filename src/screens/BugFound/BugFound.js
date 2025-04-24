@@ -55,10 +55,23 @@ function BugFound({ onNext, audioRef }) {
     <div className="bug-screen background-glitch" onClick={handleClick}>
       <div className="overlay">
         <div className="warning">밀레니엄 버그 발견</div>
-        <div className="date">{formattedDate}</div>
+        <div className="date time-mono">
+          {formattedDate.split("").map((char, i) => (
+            <span key={i}>{char}</span>
+          ))}
+        </div>
         <div className="time">
-          <span className="hoursMinutes">{hoursMinutes}</span>
-          <span className="seconds"> {seconds}</span>
+          <span className="hoursMinutes time-mono">
+            {hoursMinutes.split("").map((char, i) => (
+              <span key={i}>{char}</span>
+            ))}
+          </span>
+          <span className="seconds time-mono">
+            {" "}
+            {seconds.split("").map((char, i) => (
+              <span key={i}>{char}</span>
+            ))}
+          </span>
         </div>
       </div>
       <div className="bug">

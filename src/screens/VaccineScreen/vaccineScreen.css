@@ -48,7 +48,6 @@
 }
 
 .bug-hunting > .overlay {
-  background-color: rgba(255, 20, 0, 0.5);
   color: white;
   margin: 5vh;
   z-index: 1;
@@ -57,7 +56,7 @@
 .access__message {
   position: absolute;
   margin-top: 30vh;
-  font-size: 3vh;
+  font-size: 2vh;
   color: white;
   background-color: rgba(0, 0, 0, 0.4);
   padding: 1vh 2vh;

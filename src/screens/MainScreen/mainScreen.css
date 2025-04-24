@@ -1,0 +1,71 @@
+.main-screen {
+  background-color: #005fbd;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.main-screen__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.main-screen__bug-background {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.main-screen__bug-text {
+  color: white;
+  font-family: var(--font-game);
+  font-weight: bold;
+  user-select: none;
+  pointer-events: none;
+  text-shadow: 1px 1px black;
+  position: absolute;
+}
+
+.main-screen__folders {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  z-index: 2;
+}
+
+.folder-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.folder-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.folder-button img {
+  width: 7vh;
+}
+
+.folder-wrapper span {
+  margin-top: 0.3vh;
+  color: white;
+  font-family: var(--font-game);
+  font-size: 1.8vh;
+  text-shadow: 1px 1px black;
+}

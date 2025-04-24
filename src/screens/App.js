@@ -8,8 +8,9 @@ import StartScreen from "./StartScreen/StartScreen";
 // styles
 import "../styles/transition.css";
 import VaccineScreen from "./VaccineScreen/VaccineScreen";
-import AccessGrantedScreen from "./AccessGrantedScreen/AccessGrantedScreen";
-import EntranceScreen from "./EntranceScreen/EntranceScreen";
+import MainScreen from "./MainScreen/MainScreen";
+//import AccessGrantedScreen from "./AccessGrantedScreen/AccessGrantedScreen";
+//import EntranceScreen from "./EntranceScreen/EntranceScreen";
 
 function App() {
   const [screen, setScreen] = useState("startScreen");
@@ -52,22 +53,25 @@ function App() {
       );
       break;
     case "vaccineScreen":
-      currentScreen = (
-        <VaccineScreen onNext={() => setScreen("entranceScreen")} />
-      );
+      currentScreen = <VaccineScreen onNext={() => setScreen("mainScreen")} />;
       break;
-
-    case "accessGrantedScreen":
+    case "mainScreen":
+      currentScreen = <MainScreen onNext={() => setScreen("startScreen")} />;
+      break;
     /*
+    case "accessGrantedScreen":
+      break;
       currentScreen = (
         <AccessGrantedScreen onNext={() => setScreen("entranceScreen")} />
       );
-      break;*/
+      break;
+      
     case "entranceScreen":
       currentScreen = (
         <EntranceScreen onNext={() => setScreen("startScreen")} />
       );
       break;
+      */
     default:
       currentScreen = <div>404</div>;
       console.log("hello world");

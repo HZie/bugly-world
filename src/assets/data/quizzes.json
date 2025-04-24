@@ -1,0 +1,52 @@
+{
+  "1": {
+    "question": "버그를 찾기 위해 사용하는 기본 도구는?",
+    "answer": "1234",
+    "hint": "디버깅에 사용됩니다."
+  },
+  "2": {
+    "question": "웹 페이지의 구조를 담당하는 언어는?",
+    "answer": "1234",
+    "hint": "HTML이 대표적입니다."
+  },
+  "3": {
+    "question": "CSS는 주로 무엇을 위한 언어인가요?",
+    "answer": "1234",
+    "hint": "스타일과 관련 있어요."
+  },
+  "4": {
+    "question": "JavaScript는 어떤 언어인가요?",
+    "answer": "1234",
+    "hint": "브라우저에서 동작하는 인터랙티브한 기능 제공."
+  },
+  "5": {
+    "question": "React에서 상태를 관리할 때 사용하는 훅은?",
+    "answer": "1234",
+    "hint": "use로 시작합니다."
+  },
+  "6": {
+    "question": "Git 명령어 중 커밋을 되돌리는 명령은?",
+    "answer": "1234",
+    "hint": "reset과 관련이 있습니다."
+  },
+  "7": {
+    "question": "Firebase는 어떤 종류의 서비스인가요?",
+    "answer": "1234",
+    "hint": "백엔드 기능을 제공합니다."
+  },
+  "8": {
+    "question": "브라우저에서 데이터를 저장하는 방법은?",
+    "answer": "1234",
+    "hint": "localStorage나 sessionStorage"
+  },
+  "9": {
+    "question": "API는 무엇의 약자인가요?",
+    "answer": "1234",
+    "hint": "Application Programming Interface"
+  },
+  "10": {
+    "question": "프로그래밍에서 무한 루프는 어떤 현상인가요?",
+    "answer": "1234",
+    "hint": "조건 없이 반복되는 루프입니다."
+  }
+}

@@ -11,7 +11,7 @@ const TARGET_TIME = new Date("2000-01-01T00:00:00");
 
 function VaccineScreen({ onNext }) {
   const { agent } = useAgent();
-  console.log(agent);
+  //console.log(agent);
   // 시간 표시
   const [time, setTime] = useState(new Date());
   // 시간 팍 뜨게 하기
@@ -111,17 +111,34 @@ function VaccineScreen({ onNext }) {
       <div className={`bug-hunting ${visible ? "visible" : "hidden"}`}>
         <div
           className="overlay"
-          style={{ backgroundColor: `rgba(255, 20, 0,${bgOpacity * 0.5})` }}
+          style={{ backgroundColor: `rgba(255, 20, 0,${bgOpacity * 0.8})` }}
         >
           <div className="warning">버그 추적 중</div>
-          <div className="date">{formattedDate}</div>
+          <div className="date time-mono">
+            {formattedDate.split("").map((char, i) => (
+              <span key={i}>{char}</span>
+            ))}
+          </div>
           <div className="time">
-            <span className="hoursMinutes">{hoursMinutes}</span>
-            <span className="seconds"> {seconds}</span>
+            <span className="hoursMinutes time-mono">
+              {hoursMinutes.split("").map((char, i) => (
+                <span key={i}>{char}</span>
+              ))}
+            </span>
+            <span className="seconds time-mono">
+              {" "}
+              {seconds.split("").map((char, i) => (
+                <span key={i}>{char}</span>
+              ))}
+            </span>
           </div>
         </div>
         {accessGranted && (
-          <div className="access__message">요원에게 권한을 부여합니다.</div>
+          <div className="access__message">
+            요원에게 권한을 부여합니다.
+            <br />
+            웜홀로 입장해주십시오.
+          </div>
         )}
       </div>
     </div>
