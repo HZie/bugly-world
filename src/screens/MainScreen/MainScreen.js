@@ -123,13 +123,18 @@ function MainScreen({ onNext }) {
   }
 
   function handleMinesweeperSuccess(level) {
-    setBugRemovalIndex((prev) =>
-      level === 4
-        ? bugCount
-        : Math.min(prev + Math.floor(bugCount / 4), bugCount)
-    );
-    setSolvedLevels((prev) => [...new Set([...prev, level])]);
-    setVisibleFolderIndex((prev) => Math.max(prev, level));
+    setSolvedLevels((prevSolved) => {
+      if (prevSolved.includes(level)) return prevSolved;
+
+      // only update if not already solved
+      setBugRemovalIndex((prev) => {
+        const step = level === 4 ? bugCount : Math.floor(bugCount / 4);
+        return Math.min(prev + step, bugCount);
+      });
+      setVisibleFolderIndex((prev) => Math.max(prev, level));
+
+      return [...prevSolved, level];
+    });
   }
 
   function handleFolderClick(label, level) {

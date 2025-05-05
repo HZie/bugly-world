@@ -227,13 +227,14 @@ function Minesweeper({
 
   return (
     <div className="minesweeper">
-      <p>
-        Level: {level}{" "}
+      <div className="minesweeper-header">
+        <p>
+          Level: {level} Mines: {mineCount}
+        </p>
         <div
           className="minesweeper-center-icon"
           onClick={() => {
             if (gameState === "angry") {
-              // reset game
               setResetKey((k) => k + 1);
               setWrongAttempts(0);
               setShowHint(false);
@@ -249,9 +250,8 @@ function Minesweeper({
               ? "😐"
               : "😎"
             : "😐"}
-        </div>{" "}
-        Mines: {mineCount}
-      </p>
+        </div>
+      </div>
       <div className="minesweeper-wrapper">
         <div className="minesweeper-grid" style={{ "--cols": grid.length }}>
           {grid.map((row, rowIndex) =>

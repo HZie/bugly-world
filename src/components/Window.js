@@ -80,12 +80,57 @@ function Window({
     setIsDragging(false);
   };
 
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+      initialPos.current = { ...pos };
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (
+      !isDragging ||
+      !dragStart ||
+      !initialPos.current ||
+      !parentRef?.current ||
+      !windowRef?.current
+    )
+      return;
+
+    const dx = e.touches[0].clientX - dragStart.x;
+    const dy = e.touches[0].clientY - dragStart.y;
+
+    const parentRect = parentRef.current.getBoundingClientRect();
+    const newLeft = initialPos.current.left + dx;
+    const newTop = initialPos.current.top + dy;
+
+    const clampedLeft = Math.max(
+      0,
+      Math.min(newLeft, parentRect.width - windowRef.current.offsetWidth)
+    );
+    const clampedTop = Math.max(
+      0,
+      Math.min(newTop, parentRect.height - windowRef.current.offsetHeight)
+    );
+
+    setPos({ left: clampedLeft, top: clampedTop });
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
   useEffect(() => {
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchmove", handleTouchMove);
+    document.addEventListener("touchend", handleTouchEnd);
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
@@ -97,7 +142,11 @@ function Window({
       style={{ top: pos.top, left: pos.left, position: "absolute" }}
       onClick={onClick}
     >
-      <div className="window-header" onMouseDown={handleMouseDown}>
+      <div
+        className="window-header"
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+      >
         <span className="window-title">{title}</span>
         <button
           className="window-close"
