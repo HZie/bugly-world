@@ -13,19 +13,30 @@ import Buttons from "../Buttons";
 import "./minesweeper.css";
 import quizData from "../../assets/data/quizzes.json";
 
-function Minesweeper({ level = 1, onCorrect, onClose }) {
+function Minesweeper({
+  level = 1,
+  onCorrect,
+  onClose,
+  onSelfClose,
+  onSuccess,
+  solved,
+  skippedCount,
+  setSkippedCount,
+  parentRef,
+}) {
   const mineOrderRef = useRef([]);
   const [flagIndex, setFlagIndex] = useState(0);
+  const [quizAnswer, setQuizAnswer] = useState("");
+  const [quizOpen, setQuizOpen] = useState(false);
 
   const [grid, setGrid] = useState([]);
   const [mineCount, setMineCount] = useState(0);
-  const [quizOpen, setQuizOpen] = useState(false);
-  const [quizAnswer, setQuizAnswer] = useState("");
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [skippedFlags, setSkippedFlags] = useState([]);
   const [resetKey, setResetKey] = useState(0);
   const [gameState, setGameState] = useState("angry"); // "angry" or "cool"
+  const [skippedThisLevel, setSkippedThisLevel] = useState(false);
 
   const handleSubmitanswer = async () => {
     const dirs = [-1, 0, 1];
@@ -37,12 +48,11 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
         if (quizAnswer.trim() === correctAnswer) {
           setGrid((prev) => {
             const newGrid = prev.map((r) => r.map((c) => ({ ...c })));
-            // clear current flagged
             const [cx, cy] = mineOrderRef.current[flagIndex];
             newGrid[cx][cy].cleared = true;
             newGrid[cx][cy].revealed = true;
             newGrid[cx][cy].flagged = false;
-            // reveal neighbors
+
             dirs.forEach((dx) =>
               dirs.forEach((dy) => {
                 if (dx || dy) {
@@ -54,7 +64,7 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
                 }
               })
             );
-            // flag next mine if exists
+
             const nextIndex = flagIndex + 1;
             if (nextIndex < mineOrderRef.current.length) {
               const [nx, ny] = mineOrderRef.current[nextIndex];
@@ -73,17 +83,15 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
             }
             return newGrid;
           });
-          // advance flagIndex
           setFlagIndex((i) => i + 1);
-          setQuizOpen(false);
           onCorrect && onCorrect();
+          setQuizOpen(false);
         } else {
           setWrongAttempts((prev) => {
             const next = prev + 1;
             if (next >= 3) setShowHint(true);
             return next;
           });
-          alert("틀렸습니다!");
         }
       } else {
         alert("문제 데이터를 찾을 수 없습니다.");
@@ -96,7 +104,7 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
   };
 
   useEffect(() => {
-    const size = 5 + level * 2; // grid size increases with level (7 to 13)
+    const size = level + 2; // grid size increases with level (7 to 13)
     const mines = level; // mine count equals level for now
     setMineCount(mines);
 
@@ -109,6 +117,18 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
         adjacentMines: 0,
       }))
     );
+
+    if (solved) {
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          newGrid[i][j].cleared = true;
+          newGrid[i][j].revealed = true;
+        }
+      }
+      setGrid(newGrid);
+      setGameState("cool");
+      return;
+    }
 
     // Build a fixed random order of mine coords
     const allCells = [];
@@ -169,7 +189,7 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
     );
 
     setGrid(newGrid);
-  }, [level, resetKey]);
+  }, [level, resetKey, solved]);
 
   const onCellClick = (row, col) => {
     setGrid((prevGrid) => {
@@ -177,7 +197,8 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
       const clicked = newGrid[row][col];
       if (clicked.cleared) return newGrid;
       if (clicked.flagged && !clicked.cleared) {
-        // Only flagged cells open quiz; no reveal for others
+        setWrongAttempts(0);
+        setShowHint(false);
         setQuizOpen(true);
       }
       // All other clicks do nothing (don't reveal)
@@ -185,16 +206,24 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
     });
   };
 
-  // automatically switch to cool state when every mine is cleared
+  useEffect(() => {
+    setWrongAttempts(0);
+    setShowHint(false);
+  }, []);
+
+  // switch to cool state when all flagged cells have been cleared (🧪)
   useEffect(() => {
     if (grid.length === 0) return;
-    const allCleared = grid.every((row) =>
-      row.every((cell) => !cell.mine || cell.cleared)
+    const allFlagsCleared = grid.every((row) =>
+      row.every((cell) => {
+        return !cell.flagged || cell.cleared;
+      })
     );
-    if (allCleared) {
+    if (allFlagsCleared && !skippedThisLevel && gameState !== "hmm") {
       setGameState("cool");
+      if (!solved && onSuccess) onSuccess();
     }
-  }, [grid]);
+  }, [grid, gameState, skippedThisLevel]);
 
   return (
     <div className="minesweeper">
@@ -208,14 +237,18 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
               setResetKey((k) => k + 1);
               setWrongAttempts(0);
               setShowHint(false);
-              setQuizOpen(false);
-            } else {
-              // close window
-              onClose && onClose();
+            } else if (gameState === "cool" || gameState === "hmm") {
+              if (onSelfClose) onSelfClose();
             }
           }}
         >
-          {gameState === "angry" ? "😡" : "😎"}
+          {gameState === "angry"
+            ? "😡"
+            : gameState === "cool"
+            ? skippedThisLevel
+              ? "😐"
+              : "😎"
+            : "😐"}
         </div>{" "}
         Mines: {mineCount}
       </p>
@@ -225,9 +258,14 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
             row.map((cell, colIndex) => (
               <div
                 key={`${rowIndex}-${colIndex}`}
-                className={`minesweeper-cell ${
-                  cell.revealed ? "revealed" : ""
-                } ${cell.flagged ? "flagged" : ""}`}
+                className={`minesweeper-cell 
+  ${cell.revealed ? "revealed" : ""}
+  ${cell.flagged ? "flagged" : ""}
+  ${
+    cell.revealed && (cell.cleared || cell.adjacentMines > 0)
+      ? "sunken"
+      : "raised"
+  }`}
                 onClick={() => onCellClick(rowIndex, colIndex)}
               >
                 {cell.revealed
@@ -257,28 +295,41 @@ function Minesweeper({ level = 1, onCorrect, onClose }) {
             value={quizAnswer}
             onChange={(e) => setQuizAnswer(e.target.value)}
           />
+          {wrongAttempts > 0 && wrongAttempts < 3 && (
+            <p style={{ color: "red" }}>틀렸습니다!</p>
+          )}
           {showHint && <p className="hint">힌트: {quizData[level]?.hint}</p>}
           <Buttons onClick={handleSubmitanswer}>제출</Buttons>
           {wrongAttempts >= 3 && (
             <Buttons
               onClick={() => {
                 setQuizOpen(false);
-                setGrid((prevGrid) => {
-                  const newGrid = prevGrid.map((r) => r.map((c) => ({ ...c })));
-                  for (let i = 0; i < newGrid.length; i++) {
-                    for (let j = 0; j < newGrid[i].length; j++) {
-                      const cell = newGrid[i][j];
-                      if (cell.flagged && !cell.cleared) {
-                        cell.revealed = true;
-                        cell.flagged = false;
-                        cell.cleared = true;
-                        setSkippedFlags((prev) => [...prev, `${i}-${j}`]);
-                        return newGrid;
-                      }
+                let didSkip = false;
+
+                const updatedGrid = grid.map((row, i) =>
+                  row.map((cell, j) => {
+                    if (!didSkip && cell.flagged && !cell.cleared) {
+                      didSkip = true;
+                      setSkippedFlags((prev) => [...prev, `${i}-${j}`]);
+                      setGameState("hmm");
+                      setSkippedThisLevel(true);
+                      if (setSkippedCount) setSkippedCount((prev) => prev + 1);
+                      return {
+                        ...cell,
+                        flagged: false,
+                        cleared: true,
+                        revealed: true,
+                      };
                     }
-                  }
-                  return newGrid;
-                });
+                    return cell;
+                  })
+                );
+
+                setGrid(updatedGrid);
+
+                if (didSkip && typeof onSuccess === "function") {
+                  onSuccess();
+                }
               }}
             >
               퀴즈 넘어가기

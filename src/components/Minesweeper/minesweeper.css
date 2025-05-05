@@ -85,3 +85,26 @@
   border-bottom: 2px inset #555;
   border-right: 2px inset #555;
 }
+
+/* Raised (양각) style */
+.minesweeper-cell.raised {
+  border-top: 2px outset #fff;
+  border-left: 2px outset #fff;
+  border-bottom: 2px outset #777;
+  border-right: 2px outset #777;
+  background-color: #c0c0c0;
+}
+
+/* Sunken (음각) style */
+.minesweeper-cell.sunken {
+  border-top: 2px inset #555;
+  border-left: 2px inset #555;
+  border-bottom: 2px inset #aaa;
+  border-right: 2px inset #aaa;
+  background-color: #e0e0e0;
+}
+
+.minesweeper-cell:not(.sunken):active {
+  transform: translate(1px, 1px);
+  box-shadow: inset 1px 1px 2px #555;
+}

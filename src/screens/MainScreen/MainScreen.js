@@ -25,32 +25,42 @@ import inactivatedImg from "../../assets/images/inactivated-folder.png";
 function MainScreen({ onNext }) {
   const [fadeIn, setFadeIn] = useState("");
   const [clickDisabled, setClickDisabled] = useState(false);
-  const { setAgent } = useAgent();
+  const { setAgent, skippedCount, setSkippedCount } = useAgent();
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [windows, setWindows] = useState([]);
   const nextWindowId = useRef(0);
+  const [visibleFolderIndex, setVisibleFolderIndex] = useState(0);
+  const [bugRemovalIndex, setBugRemovalIndex] = useState(0);
+  const [solvedLevels, setSolvedLevels] = useState([]);
 
-  const bugCount = 30;
-  const bugs = Array.from({ length: bugCount }, (_, i) => {
-    const top = Math.random() * 90; // % 기준
-    const left = Math.random() * 90;
-    const size = 1.5 + Math.random() * 1.5; // vh 단위 폰트 사이즈
+  const bugCount = 150;
+  const bugDataRef = useRef(
+    Array.from({ length: bugCount }, () => ({
+      top: Math.random() * 90,
+      left: Math.random() * 90,
+      size: 1.5 + Math.random() * 1.5,
+    }))
+  );
 
-    return (
-      <span
-        key={i}
-        className="main-screen__bug-text"
-        style={{
-          top: `${top}%`,
-          left: `${left}%`,
-          fontSize: `${size}vh`,
-        }}
-      >
-        BUG
-      </span>
-    );
-  });
+  const bugs = bugDataRef.current
+    .map((data, i) => {
+      if (i < bugRemovalIndex) return null;
+      return (
+        <span
+          key={i}
+          className="main-screen__bug-text"
+          style={{
+            top: `${data.top}%`,
+            left: `${data.left}%`,
+            fontSize: `${data.size}vh`,
+          }}
+        >
+          BUG
+        </span>
+      );
+    })
+    .filter(Boolean);
 
   async function handleLoginSubmit(e) {
     e.preventDefault();
@@ -100,34 +110,6 @@ function MainScreen({ onNext }) {
     };
   }, []);
 
-  useEffect(() => {
-    if (
-      !clickDisabled &&
-      windows.length > 0 &&
-      windows[windows.length - 1].title === "UglyWorld in_BUG"
-    ) {
-      setClickDisabled(true);
-      se_error.play();
-      setTimeout(() => {
-        setWindows((prev) => prev.slice(0, -1));
-        const removalInterval = setInterval(() => {
-          setWindows((prev) => {
-            if (prev.length > 0) {
-              return prev.slice(0, -1);
-            } else {
-              clearInterval(removalInterval);
-              setTimeout(() => {
-                se_shutdown.play();
-                //onNext && onNext();
-              }, 300);
-              return [];
-            }
-          });
-        }, 50);
-      }, 1000);
-    }
-  }, [windows, clickDisabled, onNext]);
-
   function handleClick() {
     if (clickDisabled) return;
     const id = nextWindowId.current++;
@@ -140,14 +122,36 @@ function MainScreen({ onNext }) {
     setWindows((prev) => prev.filter((win) => win.id !== id));
   }
 
+  function handleMinesweeperSuccess(level) {
+    setBugRemovalIndex((prev) =>
+      level === 4
+        ? bugCount
+        : Math.min(prev + Math.floor(bugCount / 4), bugCount)
+    );
+    setSolvedLevels((prev) => [...new Set([...prev, level])]);
+    setVisibleFolderIndex((prev) => Math.max(prev, level));
+  }
+
   function handleFolderClick(label, level) {
     const id = nextWindowId.current++;
+    const isSolved = solvedLevels.includes(level);
     setWindows((prev) => [
       ...prev,
       {
         id,
         title: "UglyWorld in_BUG",
-        content: <Minesweeper level={level} parentRef={screenRef} />,
+        content: (
+          <Minesweeper
+            level={level}
+            parentRef={screenRef}
+            onSelfClose={() => handleClose(id)}
+            onSuccess={() => handleMinesweeperSuccess(level)}
+            onSkipSuccess={() => handleMinesweeperSuccess(level)}
+            solved={isSolved}
+            skippedCount={skippedCount}
+            setSkippedCount={setSkippedCount}
+          />
+        ),
       },
     ]);
     se_error.play();
@@ -159,21 +163,27 @@ function MainScreen({ onNext }) {
         {bugs}
         <div className="main-screen__folders">
           {["프로그램 설치파일", "보안패치", "바이러스 샘플", "비밀 로그"].map(
-            (label, index) => (
-              <div key={index} className="folder-wrapper">
-                <button
-                  className="folder-button"
-                  onClick={() => handleFolderClick(label, index + 1)}
-                >
-                  <img
-                    src={activatedImg}
-                    alt="activated folder"
-                    className="folder-icon"
-                  />
-                </button>
-                <span>{label}</span>
-              </div>
-            )
+            (label, index) => {
+              const isActive = index <= visibleFolderIndex;
+              return (
+                <div key={index} className="folder-wrapper">
+                  <button
+                    className="folder-button"
+                    onClick={() =>
+                      isActive && handleFolderClick(label, index + 1)
+                    }
+                    disabled={!isActive}
+                  >
+                    <img
+                      src={isActive ? activatedImg : inactivatedImg}
+                      alt={`${label} folder`}
+                      className="folder-icon"
+                    />
+                  </button>
+                  <span>{label}</span>
+                </div>
+              );
+            }
           )}
         </div>
         <div className="main-screen__screen" ref={screenRef}>

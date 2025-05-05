@@ -12,6 +12,11 @@ function Window({
   const windowRef = useRef(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
 
+  // Drag state and offset
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState(null);
+  const initialPos = useRef(null);
+
   useEffect(() => {
     if (!parentRef?.current || !windowRef.current) return;
 
@@ -34,6 +39,57 @@ function Window({
     setPos({ top: randomTop, left: randomLeft });
   }, []);
 
+  // Mouse event handlers for dragging
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+    initialPos.current = { ...pos };
+  };
+
+  const handleMouseMove = (e) => {
+    if (
+      !isDragging ||
+      !dragStart ||
+      !initialPos.current ||
+      !parentRef?.current ||
+      !windowRef?.current
+    )
+      return;
+
+    const dx = e.clientX - dragStart.x;
+    const dy = e.clientY - dragStart.y;
+
+    const parentRect = parentRef.current.getBoundingClientRect();
+    const newLeft = initialPos.current.left + dx;
+    const newTop = initialPos.current.top + dy;
+
+    const clampedLeft = Math.max(
+      0,
+      Math.min(newLeft, parentRect.width - windowRef.current.offsetWidth)
+    );
+    const clampedTop = Math.max(
+      0,
+      Math.min(newTop, parentRect.height - windowRef.current.offsetHeight)
+    );
+
+    setPos({ left: clampedLeft, top: clampedTop });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+
   return (
     <div
       ref={windowRef}
@@ -41,7 +97,7 @@ function Window({
       style={{ top: pos.top, left: pos.left, position: "absolute" }}
       onClick={onClick}
     >
-      <div className="window-header">
+      <div className="window-header" onMouseDown={handleMouseDown}>
         <span className="window-title">{title}</span>
         <button
           className="window-close"
