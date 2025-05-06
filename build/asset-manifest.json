@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/bugly-world/static/css/main.bb5e1189.css",
+    "main.js": "/bugly-world/static/js/main.6459821e.js",
+    "static/media/opening bgm.mp3": "/bugly-world/static/media/opening bgm.8967ef0362b53de9c0c0.mp3",
+    "static/media/glitched-urdy.gif": "/bugly-world/static/media/glitched-urdy.457f8e0909231bf94896.gif",
+    "static/media/glitch-pattern.png": "/bugly-world/static/media/glitch-pattern.cb04d247e13d5b1b9e2c.png",
+    "static/media/uglyworld_logo.png": "/bugly-world/static/media/uglyworld_logo.75dd7a7dee2c2689cf11.png",
+    "static/media/computer start.mp3": "/bugly-world/static/media/computer start.4c0b3925649a94b8d033.mp3",
+    "static/media/shut down.mp3": "/bugly-world/static/media/shut down.da99d20904c73c9a6439.mp3",
+    "static/media/ka1.ttf": "/bugly-world/static/media/ka1.5df8cd545dcd2db2bf8b.ttf",
+    "static/media/Let's go Digital Regular.ttf": "/bugly-world/static/media/Let's go Digital Regular.2fc1a09a7475c3ab7015.ttf",
+    "static/media/error sound.mp3": "/bugly-world/static/media/error sound.291f259e37259fee2c99.mp3",
+    "index.html": "/bugly-world/index.html",
+    "main.bb5e1189.css.map": "/bugly-world/static/css/main.bb5e1189.css.map",
+    "main.6459821e.js.map": "/bugly-world/static/js/main.6459821e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bb5e1189.css",
+    "static/js/main.6459821e.js"
+  ]
+}

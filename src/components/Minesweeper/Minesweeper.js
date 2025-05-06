@@ -229,7 +229,7 @@ function Minesweeper({
 
   return (
     <div className="minesweeper">
-      <p>
+      <span>
         Level: {level}{" "}
         <div
           className="minesweeper-center-icon"
@@ -253,7 +253,7 @@ function Minesweeper({
             : "😐"}
         </div>{" "}
         Mines: {mineCount}
-      </p>
+      </span>
       <div className="minesweeper-wrapper">
         <div className="minesweeper-grid" style={{ "--cols": grid.length }}>
           {grid.map((row, rowIndex) =>
@@ -290,13 +290,13 @@ function Minesweeper({
       </div>
       {quizOpen && (
         <div className="quiz-modal">
-          <p>
+          <span>
             {
               quizData.levels[level]?.[
                 flagIndex % quizData.levels[level].length
               ]?.question
             }
-          </p>{" "}
+          </span>{" "}
           {/* 현재 퀴즈 질문 표시 */}
           <input
             type="text"
@@ -305,17 +305,17 @@ function Minesweeper({
             onChange={(e) => setQuizAnswer(e.target.value)}
           />
           {wrongAttempts > 0 && wrongAttempts < 3 && (
-            <p style={{ color: "red" }}>틀렸습니다!</p>
+            <span style={{ color: "red" }}>틀렸습니다!</span>
           )}
           {showHint && (
-            <p className="hint">
+            <span className="hint">
               힌트:{" "}
               {
                 quizData.levels[level]?.[
                   flagIndex % quizData.levels[level].length
                 ]?.hint
               }
-            </p>
+            </span>
           )}
           <Buttons onClick={handleSubmitanswer}>제출</Buttons>
           {wrongAttempts >= 3 && (

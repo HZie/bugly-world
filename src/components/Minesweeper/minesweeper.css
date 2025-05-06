@@ -74,7 +74,7 @@
 }
 
 /* Layout header (level, icon, mines) on one line */
-.minesweeper > p {
+.minesweeper > span {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +114,7 @@
   box-shadow: inset 1px 1px 2px #555;
 }
 
-.quiz-modal > p {
+.quiz-modal > span {
   font-size: 2vh;
 }
 

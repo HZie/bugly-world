@@ -139,7 +139,7 @@ function MainScreen({ onNext }) {
       ...prev,
       {
         id,
-        title: "UglyWorld in_BUG",
+        title: "Minesweeper",
         content: (
           <Minesweeper
             level={level}
