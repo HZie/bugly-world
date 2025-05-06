@@ -29,6 +29,7 @@
   align-items: center;
   padding: 4px 8px;
   cursor: move; /* 나중에 드래그 가능하게 구현할 경우 유용 */
+  user-select: none;
   flex-shrink: 0;
 }
 
@@ -55,7 +56,7 @@
 /* 창 내용 영역 */
 .window-body {
   padding: 12px;
-  font-size: 1.7vh;
+  font-size: 1vh;
   color: black;
   display: flex;
   flex-direction: column;
@@ -72,4 +73,9 @@
 }
 .inactive > .window-header > .window-close {
   background-color: #757575;
+}
+
+/* Ensure the parent container of draggable windows allows proper positioning */
+.main-screen__screen {
+  position: relative;
 }

@@ -123,18 +123,13 @@ function MainScreen({ onNext }) {
   }
 
   function handleMinesweeperSuccess(level) {
-    setSolvedLevels((prevSolved) => {
-      if (prevSolved.includes(level)) return prevSolved;
-
-      // only update if not already solved
-      setBugRemovalIndex((prev) => {
-        const step = level === 4 ? bugCount : Math.floor(bugCount / 4);
-        return Math.min(prev + step, bugCount);
-      });
-      setVisibleFolderIndex((prev) => Math.max(prev, level));
-
-      return [...prevSolved, level];
-    });
+    setBugRemovalIndex((prev) =>
+      level === 4
+        ? bugCount
+        : Math.min(prev + Math.floor(bugCount / 8), bugCount)
+    );
+    setSolvedLevels((prev) => [...new Set([...prev, level])]);
+    setVisibleFolderIndex((prev) => Math.max(prev, level));
   }
 
   function handleFolderClick(label, level) {
@@ -167,9 +162,10 @@ function MainScreen({ onNext }) {
       <div className="main-screen__bug-background">
         {bugs}
         <div className="main-screen__folders">
-          {["프로그램 설치파일", "보안패치", "바이러스 샘플", "비밀 로그"].map(
+          {["시간여행", "우주여행", "지구여행", "바다여행"].map(
             (label, index) => {
               const isActive = index <= visibleFolderIndex;
+              const isSolved = solvedLevels.includes(index + 1); // 해당 레벨이 해결되었는지 확인
               return (
                 <div key={index} className="folder-wrapper">
                   <button
@@ -184,6 +180,8 @@ function MainScreen({ onNext }) {
                       alt={`${label} folder`}
                       className="folder-icon"
                     />
+                    {isSolved && <span className="cool-icon">😎</span>}{" "}
+                    {/* cool-icon 추가 */}
                   </button>
                   <span>{label}</span>
                 </div>

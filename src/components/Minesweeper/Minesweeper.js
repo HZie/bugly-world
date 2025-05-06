@@ -41,60 +41,62 @@ function Minesweeper({
   const handleSubmitanswer = async () => {
     const dirs = [-1, 0, 1];
     try {
-      const data = quizData[level];
-      if (data) {
-        const correctAnswer = data.answer;
+      const levelQuizzes = quizData.levels[level]; // 레벨에 해당하는 퀴즈 배열 가져오기
+      if (!levelQuizzes || levelQuizzes.length === 0) {
+        alert("문제 데이터를 찾을 수 없습니다.");
+        return;
+      }
 
-        if (quizAnswer.trim() === correctAnswer) {
-          setGrid((prev) => {
-            const newGrid = prev.map((r) => r.map((c) => ({ ...c })));
-            const [cx, cy] = mineOrderRef.current[flagIndex];
-            newGrid[cx][cy].cleared = true;
-            newGrid[cx][cy].revealed = true;
-            newGrid[cx][cy].flagged = false;
+      const currentQuiz = levelQuizzes[flagIndex % levelQuizzes.length]; // 현재 퀴즈 선택
+      const correctAnswer = currentQuiz.answer;
 
+      if (quizAnswer.trim() === correctAnswer) {
+        setGrid((prev) => {
+          const newGrid = prev.map((r) => r.map((c) => ({ ...c })));
+          const [cx, cy] = mineOrderRef.current[flagIndex];
+          newGrid[cx][cy].cleared = true;
+          newGrid[cx][cy].revealed = true;
+          newGrid[cx][cy].flagged = false;
+
+          dirs.forEach((dx) =>
+            dirs.forEach((dy) => {
+              if (dx || dy) {
+                const nx = cx + dx,
+                  ny = cy + dy;
+                if (newGrid[nx]?.[ny] && !newGrid[nx][ny].mine) {
+                  newGrid[nx][ny].revealed = true;
+                }
+              }
+            })
+          );
+
+          const nextIndex = flagIndex + 1;
+          if (nextIndex < mineOrderRef.current.length) {
+            const [nx, ny] = mineOrderRef.current[nextIndex];
+            newGrid[nx][ny].flagged = true;
             dirs.forEach((dx) =>
               dirs.forEach((dy) => {
                 if (dx || dy) {
-                  const nx = cx + dx,
-                    ny = cy + dy;
-                  if (newGrid[nx]?.[ny] && !newGrid[nx][ny].mine) {
-                    newGrid[nx][ny].revealed = true;
+                  const rx = nx + dx,
+                    ry = ny + dy;
+                  if (newGrid[rx]?.[ry] && !newGrid[rx][ry].mine) {
+                    newGrid[rx][ry].revealed = true;
                   }
                 }
               })
             );
-
-            const nextIndex = flagIndex + 1;
-            if (nextIndex < mineOrderRef.current.length) {
-              const [nx, ny] = mineOrderRef.current[nextIndex];
-              newGrid[nx][ny].flagged = true;
-              dirs.forEach((dx) =>
-                dirs.forEach((dy) => {
-                  if (dx || dy) {
-                    const rx = nx + dx,
-                      ry = ny + dy;
-                    if (newGrid[rx]?.[ry] && !newGrid[rx][ry].mine) {
-                      newGrid[rx][ry].revealed = true;
-                    }
-                  }
-                })
-              );
-            }
-            return newGrid;
-          });
-          setFlagIndex((i) => i + 1);
-          onCorrect && onCorrect();
-          setQuizOpen(false);
-        } else {
-          setWrongAttempts((prev) => {
-            const next = prev + 1;
-            if (next >= 3) setShowHint(true);
-            return next;
-          });
-        }
+          }
+          return newGrid;
+        });
+        setFlagIndex((i) => i + 1);
+        onCorrect && onCorrect();
+        setQuizOpen(false);
       } else {
-        alert("문제 데이터를 찾을 수 없습니다.");
+        setWrongAttempts((prev) => {
+          const next = prev + 1;
+          if (next >= 3) setShowHint(true);
+          return next;
+        });
       }
     } catch (error) {
       console.error("정답 확인 중 오류:", error);
@@ -227,14 +229,13 @@ function Minesweeper({
 
   return (
     <div className="minesweeper">
-      <div className="minesweeper-header">
-        <p>
-          Level: {level} Mines: {mineCount}
-        </p>
+      <p>
+        Level: {level}{" "}
         <div
           className="minesweeper-center-icon"
           onClick={() => {
             if (gameState === "angry") {
+              // reset game
               setResetKey((k) => k + 1);
               setWrongAttempts(0);
               setShowHint(false);
@@ -250,8 +251,9 @@ function Minesweeper({
               ? "😐"
               : "😎"
             : "😐"}
-        </div>
-      </div>
+        </div>{" "}
+        Mines: {mineCount}
+      </p>
       <div className="minesweeper-wrapper">
         <div className="minesweeper-grid" style={{ "--cols": grid.length }}>
           {grid.map((row, rowIndex) =>
@@ -287,8 +289,15 @@ function Minesweeper({
         </div>
       </div>
       {quizOpen && (
-        <Window title="퀴즈" onClose={() => setQuizOpen(false)}>
-          <p>{quizData[level]?.question}</p>
+        <div className="quiz-modal">
+          <p>
+            {
+              quizData.levels[level]?.[
+                flagIndex % quizData.levels[level].length
+              ]?.question
+            }
+          </p>{" "}
+          {/* 현재 퀴즈 질문 표시 */}
           <input
             type="text"
             placeholder="정답을 입력하세요"
@@ -298,7 +307,16 @@ function Minesweeper({
           {wrongAttempts > 0 && wrongAttempts < 3 && (
             <p style={{ color: "red" }}>틀렸습니다!</p>
           )}
-          {showHint && <p className="hint">힌트: {quizData[level]?.hint}</p>}
+          {showHint && (
+            <p className="hint">
+              힌트:{" "}
+              {
+                quizData.levels[level]?.[
+                  flagIndex % quizData.levels[level].length
+                ]?.hint
+              }
+            </p>
+          )}
           <Buttons onClick={handleSubmitanswer}>제출</Buttons>
           {wrongAttempts >= 3 && (
             <Buttons
@@ -335,7 +353,7 @@ function Minesweeper({
               퀴즈 넘어가기
             </Buttons>
           )}
-        </Window>
+        </div>
       )}
     </div>
   );

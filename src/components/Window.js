@@ -10,6 +10,7 @@ function Window({
   isActive = "",
 }) {
   const windowRef = useRef(null);
+  const isDraggingRef = useRef(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
 
   // Drag state and offset
@@ -37,32 +38,56 @@ function Window({
     const randomLeft = margin + Math.floor(Math.random() * safeLeft);
 
     setPos({ top: randomTop, left: randomLeft });
+    if (windowRef.current) {
+      windowRef.current.style.top = `${randomTop}px`;
+      windowRef.current.style.left = `${randomLeft}px`;
+    }
   }, []);
 
   // Mouse event handlers for dragging
   const handleMouseDown = (e) => {
+    // Debug logs for mouse down and initial position
+    console.log("Mouse down triggered");
+    console.log("windowRef.current:", windowRef.current);
+    console.log("parentRef.current:", parentRef?.current);
+
+    const windowEl = windowRef.current;
+    const parentEl = parentRef?.current;
+
+    if (windowEl && parentEl) {
+      const parentRect = parentEl.getBoundingClientRect();
+      const windowRect = windowEl.getBoundingClientRect();
+
+      const offsetX = e.clientX - windowRect.left;
+      const offsetY = e.clientY - windowRect.top;
+
+      initialPos.current = {
+        offsetX,
+        offsetY,
+      };
+
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+
     e.preventDefault();
-    setIsDragging(true);
+    isDraggingRef.current = true;
     setDragStart({ x: e.clientX, y: e.clientY });
-    initialPos.current = { ...pos };
   };
 
   const handleMouseMove = (e) => {
     if (
-      !isDragging ||
+      !isDraggingRef.current ||
       !dragStart ||
       !initialPos.current ||
-      !parentRef?.current ||
-      !windowRef?.current
+      !windowRef.current ||
+      !parentRef?.current
     )
       return;
 
-    const dx = e.clientX - dragStart.x;
-    const dy = e.clientY - dragStart.y;
-
     const parentRect = parentRef.current.getBoundingClientRect();
-    const newLeft = initialPos.current.left + dx;
-    const newTop = initialPos.current.top + dy;
+    const newLeft = e.clientX - parentRect.left - initialPos.current.offsetX;
+    const newTop = e.clientY - parentRect.top - initialPos.current.offsetY;
 
     const clampedLeft = Math.max(
       0,
@@ -73,37 +98,74 @@ function Window({
       Math.min(newTop, parentRect.height - windowRef.current.offsetHeight)
     );
 
-    setPos({ left: clampedLeft, top: clampedTop });
+    setPos({ top: clampedTop, left: clampedLeft });
+    if (windowRef.current) {
+      windowRef.current.style.top = `${clampedTop}px`;
+      windowRef.current.style.left = `${clampedLeft}px`;
+    }
   };
 
   const handleMouseUp = () => {
-    setIsDragging(false);
+    isDraggingRef.current = false;
+    console.log("Drag ended");
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
   };
 
   const handleTouchStart = (e) => {
+    if (e.target.closest("input, textarea, [contenteditable=true]") !== null) {
+      isDraggingRef.current = false;
+      return;
+    }
+
     if (e.touches.length === 1) {
-      setIsDragging(true);
-      setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-      initialPos.current = { ...pos };
+      const windowEl = windowRef.current;
+      const parentEl = parentRef?.current;
+
+      if (windowEl && parentEl) {
+        const parentRect = parentEl.getBoundingClientRect();
+        const windowRect = windowEl.getBoundingClientRect();
+
+        const offsetX = e.touches[0].clientX - windowRect.left;
+        const offsetY = e.touches[0].clientY - windowRect.top;
+
+        initialPos.current = {
+          offsetX,
+          offsetY,
+        };
+
+        isDraggingRef.current = true;
+        setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+
+        document.addEventListener("touchmove", handleTouchMove, {
+          passive: false,
+        });
+        document.addEventListener("touchend", handleTouchEnd);
+      }
     }
   };
 
   const handleTouchMove = (e) => {
+    const isInput =
+      e.target.closest("input, textarea, [contenteditable=true]") !== null;
+
+    if (isInput) return;
+
+    e.preventDefault();
     if (
-      !isDragging ||
+      !isDraggingRef.current ||
       !dragStart ||
       !initialPos.current ||
-      !parentRef?.current ||
-      !windowRef?.current
+      !windowRef.current ||
+      !parentRef?.current
     )
       return;
 
-    const dx = e.touches[0].clientX - dragStart.x;
-    const dy = e.touches[0].clientY - dragStart.y;
-
     const parentRect = parentRef.current.getBoundingClientRect();
-    const newLeft = initialPos.current.left + dx;
-    const newTop = initialPos.current.top + dy;
+    const newLeft =
+      e.touches[0].clientX - parentRect.left - initialPos.current.offsetX;
+    const newTop =
+      e.touches[0].clientY - parentRect.top - initialPos.current.offsetY;
 
     const clampedLeft = Math.max(
       0,
@@ -114,32 +176,29 @@ function Window({
       Math.min(newTop, parentRect.height - windowRef.current.offsetHeight)
     );
 
-    setPos({ left: clampedLeft, top: clampedTop });
+    setPos({ top: clampedTop, left: clampedLeft });
+    if (windowRef.current) {
+      windowRef.current.style.top = `${clampedTop}px`;
+      windowRef.current.style.left = `${clampedLeft}px`;
+    }
   };
 
   const handleTouchEnd = () => {
-    setIsDragging(false);
+    isDraggingRef.current = false;
+    console.log("Touch drag ended");
+    document.removeEventListener("touchmove", handleTouchMove);
+    document.removeEventListener("touchend", handleTouchEnd);
   };
-
-  useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("touchmove", handleTouchMove);
-    document.addEventListener("touchend", handleTouchEnd);
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
 
   return (
     <div
       ref={windowRef}
       className={`window ${isActive}`}
-      style={{ top: pos.top, left: pos.left, position: "absolute" }}
+      style={{
+        top: `${pos.top}px`,
+        left: `${pos.left}px`,
+        position: "absolute",
+      }}
       onClick={onClick}
     >
       <div

@@ -49,6 +49,7 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  position: relative; /* 추가: cool-icon의 기준이 됩니다 */
 }
 
 .folder-button {
@@ -67,4 +68,15 @@
   color: white;
   font-size: 1.8vh;
   text-shadow: 1px 1px black;
+}
+
+.folder-button {
+  text-align: center;
+}
+.main-screen__folders > .folder-wrapper > .folder-button > .cool-icon {
+  font-size: 5vh;
+  top: 0%;
+  z-index: 2; /* z-index를 높게 설정 */
+  margin: 0;
+  padding: 0;
 }
