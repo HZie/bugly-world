@@ -4,15 +4,11 @@ import "./startScreen.css";
 import "../../styles/transition.css";
 import bgm from "../../assets/sounds/opening bgm.mp3";
 
-function StartScreen({ onNext, audioRef, onEnterFullScreen }) {
+function StartScreen({ onNext, audioRef }) {
   const [clicked, setClicked] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (clicked) return; // 중복 클릭 방지
-
-    if (onEnterFullScreen) {
-      await onEnterFullScreen();
-    }
 
     if (!audioRef.current) {
       audioRef.current = new Audio(bgm);

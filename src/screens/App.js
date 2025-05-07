@@ -45,6 +45,36 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const preloadAudio = (src) => {
+      const audio = new Audio();
+      audio.src = src;
+    };
+
+    const preloadImage = (src) => {
+      const img = new Image();
+      img.src = src;
+    };
+
+    // 오디오 프리로드
+    preloadAudio("/assets/sounds/warning.mp3");
+    preloadAudio("/assets/sounds/error sound.mp3");
+    preloadAudio("/assets/sounds/opening bgm.mp3");
+    preloadAudio("/assets/sounds/computer start.mp3");
+    preloadAudio("/assets/sounds/chasing.mp3");
+    preloadAudio("/assets/sounds/complete.mp3");
+    preloadAudio("/assets/sounds/mouse click.mp3");
+    preloadAudio("/assets/sounds/portion.mp3");
+    preloadAudio("/assets/sounds/shut down.mp3");
+
+    // 이미지 프리로드 (예시)
+    preloadImage("/assets/images/activated-folder.png");
+    preloadImage("/assets/images/inactivated-folder.png");
+    preloadImage("/assets/images/glitch-pattern.png");
+    preloadImage("/assets/images/glitched-urdy.gif");
+    preloadImage("/assets/images/urdy.png");
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem("lastScreen", screen);
   }, [screen]);
 

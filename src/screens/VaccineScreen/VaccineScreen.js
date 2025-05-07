@@ -48,18 +48,19 @@ function VaccineScreen({ onNext }) {
       setTime((prev) => {
         const next = new Date(prev.getTime() - 1000 * frame); // 1초 감소
         if (next <= TARGET_TIME) {
+          warningAudio.play();
+
           clearTimeout(timeoutId);
           setAccessGranted(true);
           setFlashOverlay(true);
-          warningAudio.play();
           // setTimeout(() => setFlashOverlay(false), 1000);
           return TARGET_TIME;
         }
 
         return next;
       });
-      // 호출 간격 줄이기
-      frame = frame * 1.01;
+      // 호출 간격 줄이기 (더 빠르게 감소)
+      frame = frame * 1.05;
       delay = delay / frame;
       timeoutId = setTimeout(tick, delay);
     };
@@ -120,6 +121,15 @@ function VaccineScreen({ onNext }) {
   const seconds = ss; // ss
 
   const handleClick = () => {
+    // Attempt to unlock warningAudio on mobile
+    warningAudio
+      .play()
+      .then(() => {
+        warningAudio.pause();
+        warningAudio.currentTime = 0;
+      })
+      .catch(() => {});
+
     if (accessGranted) {
       warningAudio.pause();
       warningAudio.currentTime = 0;
