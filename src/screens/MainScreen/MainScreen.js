@@ -183,7 +183,7 @@ function MainScreen({ onNext }) {
                     {isSolved && <span className="cool-icon">😎</span>}{" "}
                     {/* cool-icon 추가 */}
                   </button>
-                  <span>{label}</span>
+                  <span onClick={onNext}>{label}</span>
                 </div>
               );
             }

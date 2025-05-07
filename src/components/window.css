@@ -56,7 +56,7 @@
 /* 창 내용 영역 */
 .window-body {
   padding: 12px;
-  font-size: 1vh;
+  font-size: 1.5vh;
   color: black;
   display: flex;
   flex-direction: column;

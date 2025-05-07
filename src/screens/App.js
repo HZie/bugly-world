@@ -16,6 +16,29 @@ function App() {
   const [screen, setScreen] = useState("startScreen");
   const audioRef = useRef(null);
 
+  // 전체 화면 모드로 진입
+  useEffect(() => {
+    const enterFullScreen = async () => {
+      try {
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+          // Firefox
+          await document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          // Chrome, Safari, Opera
+          await document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+          // IE/Edge
+          await document.documentElement.msRequestFullscreen();
+        }
+      } catch (err) {
+        console.error("전체 화면 전환 오류:", err);
+      }
+    };
+    enterFullScreen();
+  }, []);
+
   // 저장된 화면 복구
   useEffect(() => {
     const savedScreen = localStorage.getItem("lastScreen");
@@ -73,7 +96,7 @@ function App() {
       break;
       */
     default:
-      currentScreen = <div>404</div>;
+      currentScreen = <div onClick={() => setScreen("startScreen")}>404</div>;
       console.log("hello world");
   }
 
