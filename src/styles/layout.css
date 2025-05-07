@@ -4,8 +4,8 @@
 
 .mobile {
   width: 100vw;
-  height: calc(100vh - 20px); /* Adjust height relative to the viewport */
   max-width: 430px;
+  height: 100vh;
   max-height: 1000px;
   margin: 0 auto;
   display: flex;

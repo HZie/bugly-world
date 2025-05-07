@@ -77,13 +77,13 @@ p {
 }
 
 .vaccine-alert__start {
-  font-size: 4vh;
+  font-size: 6vh;
   color: white;
   -webkit-text-stroke: 1px black;
 }
 
 .vaccine-alert__vaccinate {
-  font-size: 6vh;
+  font-size: 8vh;
   -webkit-text-stroke: 1px black;
   color: #63cffa;
 }

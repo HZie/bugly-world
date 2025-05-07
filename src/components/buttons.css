@@ -1,13 +1,16 @@
 .window-button {
-  font-size: 1.5vh;
+  font-size: 3vh;
   color: black;
-  border: 0.5px grey solid;
-  box-shadow: 2px 2px black;
+  border-top: 2px outset #fff;
+  border-left: 2px outset #fff;
+  border-bottom: 2px outset #777;
+  border-right: 2px outset #777;
+  background-color: #c0c0c0;
   margin: 1vh;
 }
 
 .window-submit {
-  font-size: 1.5vh;
+  font-size: 3vh;
   cursor: pointer;
   border: 0.5px grey solid;
   box-shadow: 2px 2px black;
@@ -17,5 +20,9 @@
 .window-button:active,
 .window-submit:active {
   transform: translateY(2px);
-  box-shadow: 0 0 0 black;
+  border-top: 2px inset #555;
+  border-left: 2px inset #555;
+  border-bottom: 2px inset #aaa;
+  border-right: 2px inset #aaa;
+  background-color: #e0e0e0;
 }

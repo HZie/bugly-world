@@ -229,10 +229,10 @@ function Minesweeper({
 
   return (
     <div className="minesweeper">
-      <span>
-        Level: {level}{" "}
+      <span className="minesweeper-header">
+        <div className="number">Lvl {level}</div>
         <div
-          className="minesweeper-center-icon"
+          className="minesweeper-icon"
           onClick={() => {
             if (gameState === "angry") {
               // reset game
@@ -251,23 +251,27 @@ function Minesweeper({
               ? "😐"
               : "😎"
             : "😐"}
-        </div>{" "}
-        Mines: {mineCount}
+        </div>
+        <div className="number">0 0 {mineCount}</div>
       </span>
       <div className="minesweeper-wrapper">
-        <div className="minesweeper-grid" style={{ "--cols": grid.length }}>
+        <div
+          className="minesweeper-grid"
+          style={{ "--cols": grid.length, "--rows": grid.length }}
+        >
           {grid.map((row, rowIndex) =>
             row.map((cell, colIndex) => (
               <div
                 key={`${rowIndex}-${colIndex}`}
                 className={`minesweeper-cell 
-  ${cell.revealed ? "revealed" : ""}
-  ${cell.flagged ? "flagged" : ""}
-  ${
-    cell.revealed && (cell.cleared || cell.adjacentMines > 0)
-      ? "sunken"
-      : "raised"
-  }`}
+          ${cell.revealed ? "revealed" : ""}
+          ${cell.flagged ? "flagged" : ""}
+          ${
+            cell.revealed && (cell.cleared || cell.adjacentMines > 0)
+              ? "sunken"
+              : "raised"
+          }`}
+                data-value={cell.adjacentMines > 0 ? cell.adjacentMines : ""}
                 onClick={() => onCellClick(rowIndex, colIndex)}
               >
                 {cell.revealed
@@ -300,7 +304,7 @@ function Minesweeper({
           {/* 현재 퀴즈 질문 표시 */}
           <input
             type="text"
-            placeholder="정답을 입력하세요"
+            placeholder="정답"
             value={quizAnswer}
             onChange={(e) => setQuizAnswer(e.target.value)}
           />
