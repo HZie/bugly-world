@@ -34,7 +34,7 @@
 .bugName {
   font-size: 17vh;
   -webkit-text-stroke: 2px black;
-  margin-top: -15%;
+  margin-top: -20%;
   color: var(--color-yellow);
   display: inline-block;
 }

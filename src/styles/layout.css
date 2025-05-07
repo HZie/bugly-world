@@ -6,7 +6,6 @@
   width: 100vw;
   max-width: 430px;
   height: 100vh; /* fallback for older browsers */
-  height: 100dvh; /* dynamic viewport height for modern mobile browsers */
   max-height: 1000px;
   margin: 0 auto;
   display: flex;
