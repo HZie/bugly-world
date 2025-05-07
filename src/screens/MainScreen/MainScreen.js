@@ -220,10 +220,9 @@ function MainScreen({ onNext }) {
         const levelQuizzes = quizData.levels[currentLevel];
         if (levelQuizzes && levelQuizzes.length > 0) {
           setCurrentQuiz(levelQuizzes[flagIndex % levelQuizzes.length]);
-          setWrongAttempts(0);
-          setShowHint(false);
           setShowWrongMessage(false);
           setQuizVisible(true); // 퀴즈 모달 열기
+          if (wrongAttempts >= 3) setShowHint(true);
           se_error.play();
         } else {
           alert("퀴즈 데이터를 찾을 수 없습니다.");
@@ -455,51 +454,56 @@ function MainScreen({ onNext }) {
               <div className="quiz-buttons">
                 <Buttons onClick={handleSubmitanswer}>제출</Buttons>
                 {wrongAttempts >= 3 && (
-                  <Buttons
-                    onClick={() => {
-                      // 먼저 퀴즈 모달 닫기 상태 처리
-                      setQuizVisible(false);
-                      setQuizOpen(false);
+                  <>
+                    <div className="quiz-hint">
+                      힌트: {currentQuiz && currentQuiz.hint}
+                    </div>
+                    <Buttons
+                      onClick={() => {
+                        // 먼저 퀴즈 모달 닫기 상태 처리
+                        setQuizVisible(false);
+                        setQuizOpen(false);
 
-                      let didSkip = false;
-                      const updatedGrid = grid.map((row, i) =>
-                        row.map((cell, j) => {
-                          if (!didSkip && cell.flagged && !cell.cleared) {
-                            didSkip = true;
-                            setSkippedFlags((prev) => [...prev, `${i}-${j}`]);
-                            setGameState("hmm");
-                            setSkippedThisLevel(true);
-                            if (setSkippedCount)
-                              setSkippedCount((prev) => prev + 1);
-                            return {
-                              ...cell,
-                              flagged: false,
-                              cleared: true,
-                              revealed: true,
-                            };
-                          }
-                          return cell;
-                        })
-                      );
+                        let didSkip = false;
+                        const updatedGrid = grid.map((row, i) =>
+                          row.map((cell, j) => {
+                            if (!didSkip && cell.flagged && !cell.cleared) {
+                              didSkip = true;
+                              setSkippedFlags((prev) => [...prev, `${i}-${j}`]);
+                              setGameState("hmm");
+                              setSkippedThisLevel(true);
+                              if (setSkippedCount)
+                                setSkippedCount((prev) => prev + 1);
+                              return {
+                                ...cell,
+                                flagged: false,
+                                cleared: true,
+                                revealed: true,
+                              };
+                            }
+                            return cell;
+                          })
+                        );
 
-                      // 다음 퀴즈로 넘어가기 및 flagging
-                      const nextIndex = flagIndex + 1;
-                      if (nextIndex < mineOrderRef.current.length) {
-                        const [nx, ny] = mineOrderRef.current[nextIndex];
-                        updatedGrid[nx][ny].flagged = true;
-                        // Don't setCurrentQuiz, setWrongAttempts, setShowHint here (no preloading quiz)
-                      } else {
-                        onSuccess("hmm");
-                        // setQuizVisible and setQuizOpen already called above
-                      }
+                        // 다음 퀴즈로 넘어가기 및 flagging
+                        const nextIndex = flagIndex + 1;
+                        if (nextIndex < mineOrderRef.current.length) {
+                          const [nx, ny] = mineOrderRef.current[nextIndex];
+                          updatedGrid[nx][ny].flagged = true;
+                          // Don't setCurrentQuiz, setWrongAttempts, setShowHint here (no preloading quiz)
+                        } else {
+                          onSuccess("hmm");
+                          // setQuizVisible and setQuizOpen already called above
+                        }
 
-                      setGrid(updatedGrid);
-                      setFlagIndex((i) => i + 1);
-                      // If opening a window here, play error sound after setWindows
-                    }}
-                  >
-                    퀴즈 넘어가기
-                  </Buttons>
+                        setGrid(updatedGrid);
+                        setFlagIndex((i) => i + 1);
+                        // If opening a window here, play error sound after setWindows
+                      }}
+                    >
+                      퀴즈 넘어가기
+                    </Buttons>
+                  </>
                 )}
                 <Buttons
                   onClick={() => setQuizVisible(false)}

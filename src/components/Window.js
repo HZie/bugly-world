@@ -26,15 +26,17 @@ function Window({
 
     // 안전 여유 (px)
     const margin = 20;
+    const headerHeight = 30; // assume header height is about 30px
     const maxTop = parentRect.height - windowRect.height - margin;
     const maxLeft = parentRect.width - windowRect.width - margin;
+    const minTop = headerHeight; // to ensure header is visible
 
     // 음수 방지
     const safeTop = Math.max(0, maxTop);
     const safeLeft = Math.max(0, maxLeft);
 
     // 랜덤 배치 (부모 안)
-    const randomTop = margin + Math.floor(Math.random() * safeTop);
+    const randomTop = Math.floor(Math.random() * (safeTop - minTop)) + minTop;
     const randomLeft = margin + Math.floor(Math.random() * safeLeft);
 
     setPos({ top: randomTop, left: randomLeft });

@@ -16,28 +16,22 @@ function App() {
   const [screen, setScreen] = useState("startScreen");
   const audioRef = useRef(null);
 
-  // 전체 화면 모드로 진입
-  useEffect(() => {
-    const enterFullScreen = async () => {
-      try {
-        if (document.documentElement.requestFullscreen) {
-          await document.documentElement.requestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-          // Firefox
-          await document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          // Chrome, Safari, Opera
-          await document.documentElement.webkitRequestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) {
-          // IE/Edge
-          await document.documentElement.msRequestFullscreen();
-        }
-      } catch (err) {
-        console.error("전체 화면 전환 오류:", err);
+  const handleEnterFullScreen = async () => {
+    try {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        await elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+        await elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) {
+        await elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        await elem.msRequestFullscreen();
       }
-    };
-    enterFullScreen();
-  }, []);
+    } catch (err) {
+      console.error("전체 화면 전환 오류:", err);
+    }
+  };
 
   // 저장된 화면 복구
   useEffect(() => {
@@ -59,7 +53,11 @@ function App() {
   switch (screen) {
     case "startScreen":
       currentScreen = (
-        <StartScreen onNext={() => setScreen("bugFound")} audioRef={audioRef} />
+        <StartScreen
+          onNext={() => setScreen("bugFound")}
+          audioRef={audioRef}
+          onEnterFullScreen={handleEnterFullScreen}
+        />
       );
       break;
     case "bugFound":
