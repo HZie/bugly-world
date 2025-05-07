@@ -63,3 +63,17 @@
   border-radius: 8px;
   transition: opacity 0.5s ease;
 }
+
+.flash {
+  animation: flashOverlay 0.5s alternate infinite;
+  animation-fill-mode: both;
+}
+
+@keyframes flashOverlay {
+  0% {
+    background-color: rgba(255, 20, 0, 0.8);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+}

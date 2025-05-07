@@ -1,10 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-
-// 로그인용
 import { useAgent } from "../../contexts/AgentContext";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../../firebase";
-import { hashPassword } from "../../utils/hash";
 
 import "../../styles/layout.css";
 import "../../styles/transition.css";
@@ -15,8 +10,8 @@ import quizData from "../../assets/data/quizzes.json";
 
 // Sound
 import error from "../../assets/sounds/error sound.mp3";
-import shutdown from "../../assets/sounds/shut down.mp3";
-import Submits from "../../components/Submits";
+import portion from "../../assets/sounds/portion.mp3";
+import success from "../../assets/sounds/complete.mp3";
 
 // folder
 import activatedImg from "../../assets/images/activated-folder.png";
@@ -26,15 +21,12 @@ function MainScreen({ onNext }) {
   const [fadeIn, setFadeIn] = useState("");
   const [clickDisabled, setClickDisabled] = useState(false);
   const { setAgent, skippedCount, setSkippedCount } = useAgent();
-  const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
   const [windows, setWindows] = useState([]);
-  const nextWindowId = useRef(0);
   const [visibleFolderIndex, setVisibleFolderIndex] = useState(0);
   const [bugRemovalIndex, setBugRemovalIndex] = useState(0);
   const [solvedLevels, setSolvedLevels] = useState([]);
-  const [minesweeperVisible, setMinesweeperVisible] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
+  const [minesweeperVisible, setMinesweeperVisible] = useState(false);
   const [grid, setGrid] = useState([]);
   const [mineCount, setMineCount] = useState(0);
   const [flagIndex, setFlagIndex] = useState(0);
@@ -44,7 +36,14 @@ function MainScreen({ onNext }) {
   const [quizVisible, setQuizVisible] = useState(false);
   const [currentQuiz, setCurrentQuiz] = useState(null);
   const [showWrongMessage, setShowWrongMessage] = useState(false);
+  const [gameState, setGameState] = useState("angry");
+  const [skippedFlags, setSkippedFlags] = useState([]);
+  const [skippedThisLevel, setSkippedThisLevel] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
   const mineOrderRef = useRef([]);
+  const nextWindowId = useRef(0);
+  // Overlay state
+  const [showOverlay, setShowOverlay] = useState(false);
 
   const bugCount = 150;
   const bugDataRef = useRef(
@@ -74,36 +73,9 @@ function MainScreen({ onNext }) {
     })
     .filter(Boolean);
 
-  async function handleLoginSubmit(e) {
-    e.preventDefault();
-    const hashed = await hashPassword(password);
-
-    const q = query(
-      collection(db, "agents"),
-      where("passwordHash", "==", hashed)
-    );
-    const snapshot = await getDocs(q);
-
-    if (!snapshot.empty) {
-      const doc = snapshot.docs[0];
-      const data = doc.data();
-      setAgent({
-        id: doc.id,
-        progress: data.progress ?? 0,
-        passwordHash: hashed,
-      });
-      setLoginError("");
-      handleClick();
-    } else {
-      setLoginError("요원코드가 올바르지 않습니다.");
-      handleClose();
-    }
-  }
-
   const screenRef = useRef(null);
 
   const se_error = new Audio(error);
-  const se_shutdown = new Audio(shutdown);
 
   function createWindowContent(label) {
     return {
@@ -195,14 +167,6 @@ function MainScreen({ onNext }) {
     setGrid(newGrid);
   }, [minesweeperVisible, currentLevel]);
 
-  function handleClick() {
-    if (clickDisabled) return;
-    const id = nextWindowId.current++;
-    const { title, content } = createWindowContent("첫 번째 창");
-    setWindows((prev) => [...prev, { id, title, content }]);
-    se_error.play();
-  }
-
   function handleClose(id) {
     setWindows((prev) => prev.filter((win) => win.id !== id));
   }
@@ -224,23 +188,27 @@ function MainScreen({ onNext }) {
     console.log("Minesweeper 성공!");
     handleMinesweeperSuccess(currentLevel);
     setGameState(state);
+    setTimeout(() => {
+      setShowOverlay(true);
+      new Audio(success).play();
+    }, 50);
   }
 
   function handleFolderClick(label, level) {
+    setShowOverlay(false);
     setCurrentLevel(level);
     setMinesweeperVisible(true);
     setSkippedThisLevel(false); // Reset skippedThisLevel when a new level starts
     setGameState("angry");
+    se_error.play();
+    // If opening a window here in the future, play error sound after setWindows
   }
 
   function handleMinesweeperClose() {
+    setShowOverlay(false);
     setMinesweeperVisible(false);
   }
 
-  const [gameState, setGameState] = useState("angry");
-  const [skippedFlags, setSkippedFlags] = useState([]);
-  const [skippedThisLevel, setSkippedThisLevel] = useState(false);
-  const [resetKey, setResetKey] = useState(0);
   const [quizOpen, setQuizOpen] = useState(false);
 
   function handleCellClick(row, col) {
@@ -256,6 +224,7 @@ function MainScreen({ onNext }) {
           setShowHint(false);
           setShowWrongMessage(false);
           setQuizVisible(true); // 퀴즈 모달 열기
+          se_error.play();
         } else {
           alert("퀴즈 데이터를 찾을 수 없습니다.");
         }
@@ -286,6 +255,7 @@ function MainScreen({ onNext }) {
           newGrid[cx][cy].revealed = true;
           newGrid[cx][cy].flagged = false;
           newGrid[cx][cy].potion = true;
+          new Audio(portion).play();
 
           dirs.forEach((dx) =>
             dirs.forEach((dy) => {
@@ -351,9 +321,11 @@ function MainScreen({ onNext }) {
                   <button
                     className="folder-button"
                     onClick={() =>
-                      isActive && handleFolderClick(label, index + 1)
+                      isActive &&
+                      !isSolved &&
+                      handleFolderClick(label, index + 1)
                     }
-                    disabled={!isActive}
+                    disabled={!isActive || isSolved}
                   >
                     <img
                       src={isActive ? activatedImg : inactivatedImg}
@@ -380,6 +352,20 @@ function MainScreen({ onNext }) {
             parentRef={screenRef}
           >
             <div className="minesweeper">
+              {showOverlay && (
+                <div className="cured overlay">
+                  <div className="cured-icon" onClick={handleMinesweeperClose}>
+                    {gameState === "angry"
+                      ? "😡"
+                      : gameState === "cool"
+                      ? skippedThisLevel
+                        ? "😐"
+                        : "😎"
+                      : "😐"}
+                  </div>
+                  CURED
+                </div>
+              )}
               <span className="minesweeper-header">
                 <div className="number">Lvl {currentLevel}</div>
                 <div
@@ -509,6 +495,7 @@ function MainScreen({ onNext }) {
 
                       setGrid(updatedGrid);
                       setFlagIndex((i) => i + 1);
+                      // If opening a window here, play error sound after setWindows
                     }}
                   >
                     퀴즈 넘어가기

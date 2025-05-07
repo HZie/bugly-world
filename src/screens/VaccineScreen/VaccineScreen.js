@@ -6,8 +6,16 @@ import "./vaccineScreen.css";
 import "../../styles/global.css";
 import "../../styles/layout.css";
 import "../../styles/typography.css";
+import warning from "../../assets/sounds/warning.mp3";
+import chasing from "../../assets/sounds/chasing.mp3";
+import computerStart from "../../assets/sounds/computer start.mp3";
+
+const chasingAudio = new Audio(chasing);
 
 const TARGET_TIME = new Date("2000-01-01T00:00:00");
+
+const warningAudio = new Audio(warning);
+const computerStartAudio = new Audio(computerStart);
 
 function VaccineScreen({ onNext }) {
   const { agent } = useAgent();
@@ -18,6 +26,7 @@ function VaccineScreen({ onNext }) {
   const [visible, setVisible] = useState(false);
   const [bgOpacity, setBgOpacity] = useState(0);
   const [accessGranted, setAccessGranted] = useState(false);
+  const [flashOverlay, setFlashOverlay] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,11 +43,16 @@ function VaccineScreen({ onNext }) {
     let timeoutId;
 
     const tick = () => {
+      chasingAudio.play();
+
       setTime((prev) => {
         const next = new Date(prev.getTime() - 1000 * frame); // 1초 감소
         if (next <= TARGET_TIME) {
           clearTimeout(timeoutId);
           setAccessGranted(true);
+          setFlashOverlay(true);
+          warningAudio.play();
+          // setTimeout(() => setFlashOverlay(false), 1000);
           return TARGET_TIME;
         }
 
@@ -51,7 +65,11 @@ function VaccineScreen({ onNext }) {
     };
     timeoutId = setTimeout(tick, delay);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      warningAudio.pause();
+      warningAudio.currentTime = 0;
+    };
   }, [visible, onNext]);
 
   useEffect(() => {
@@ -102,7 +120,12 @@ function VaccineScreen({ onNext }) {
   const seconds = ss; // ss
 
   const handleClick = () => {
-    onNext();
+    if (accessGranted) {
+      warningAudio.pause();
+      warningAudio.currentTime = 0;
+      computerStartAudio.play();
+      onNext();
+    }
   };
 
   return (
@@ -110,7 +133,7 @@ function VaccineScreen({ onNext }) {
       <div className="bg-layer" style={{ opacity: bgOpacity }} />
       <div className={`bug-hunting ${visible ? "visible" : "hidden"}`}>
         <div
-          className="overlay"
+          className={`overlay ${flashOverlay ? "flash" : ""}`}
           style={{ backgroundColor: `rgba(255, 20, 0,${bgOpacity * 0.8})` }}
         >
           <div className="warning">버그 추적 중</div>
