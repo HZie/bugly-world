@@ -60,7 +60,7 @@ function VaccineScreen({ onNext }) {
         return next;
       });
       // 호출 간격 줄이기 (더 빠르게 감소)
-      frame = frame * 1.05;
+      frame = frame * 1.02;
       delay = delay / frame;
       timeoutId = setTimeout(tick, delay);
     };
