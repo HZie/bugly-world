@@ -134,12 +134,24 @@ function App() {
       currentScreen = <LastScreen onNext={() => setScreen("startScreen")} />;
       break;
     default:
-      currentScreen = <div onClick={() => setScreen("startScreen")}>404</div>;
+      currentScreen = (
+        <StartScreen
+          onNext={() => setScreen("startScreen")}
+          audioRef={audioRef}
+        />
+      );
   }
 
   return (
     <div className="mobile">
-      <div className="corner-text">UglyWorld in_BUG</div>
+      <div
+        className="corner-text"
+        onClick={() => {
+          setScreen("startScreen");
+        }}
+      >
+        UglyWorld in_BUG
+      </div>
       {currentScreen}
     </div>
   );

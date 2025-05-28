@@ -9,10 +9,10 @@ import Buttons from "../../components/Buttons";
 import quizData from "../../assets/data/quizzes.json";
 
 // Sound
-import error from "../../assets/sounds/error sound.mp3";
-import portion from "../../assets/sounds/portion.mp3";
-import success from "../../assets/sounds/complete.mp3";
-import warning from "../../assets/sounds/warning.mp3";
+import error from "../../assets/sounds/error sound.ogg";
+import portion from "../../assets/sounds/portion.ogg";
+import success from "../../assets/sounds/complete.ogg";
+import warning from "../../assets/sounds/warning.ogg";
 
 // folder
 import activatedImg from "../../assets/images/activated-folder.png";
@@ -483,7 +483,6 @@ function MainScreen({ onNext }) {
           <Window
             title="Quiz"
             onClose={() => setQuizVisible(false)}
-            className="quiz-modal"
             parentRef={screenRef}
           >
             <div className="quiz-content">

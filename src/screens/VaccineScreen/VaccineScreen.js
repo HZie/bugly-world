@@ -6,9 +6,9 @@ import "./vaccineScreen.css";
 import "../../styles/global.css";
 import "../../styles/layout.css";
 import "../../styles/typography.css";
-import warning from "../../assets/sounds/warning.mp3";
-import chasing from "../../assets/sounds/chasing.mp3";
-import computerStart from "../../assets/sounds/computer start.mp3";
+import warning from "../../assets/sounds/warning.ogg";
+import chasing from "../../assets/sounds/chasing.ogg";
+import computerStart from "../../assets/sounds/computer start.ogg";
 
 const chasingAudio = new Audio(chasing);
 
@@ -28,6 +28,7 @@ function VaccineScreen({ onNext }) {
   const [bgOpacity, setBgOpacity] = useState(0);
   const [accessGranted, setAccessGranted] = useState(false);
   const [flashOverlay, setFlashOverlay] = useState(false);
+  const [audioPlayed, setAudioPlayed] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,11 +45,16 @@ function VaccineScreen({ onNext }) {
     let timeoutId;
 
     const tick = () => {
-      chasingAudio.play();
+      if (!audioPlayed) {
+        chasingAudio.play();
+        setAudioPlayed(true);
+      }
 
       setTime((prev) => {
         const next = new Date(prev.getTime() - 1000 * frame); // 1초 감소
         if (next <= TARGET_TIME) {
+          chasingAudio.pause();
+          chasingAudio.currentTime = 0;
           warningAudio.play();
 
           clearTimeout(timeoutId);

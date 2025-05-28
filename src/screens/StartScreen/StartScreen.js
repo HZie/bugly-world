@@ -2,7 +2,7 @@ import { useState } from "react";
 import logo from "../../assets/images/uglyworld_logo.png";
 import "./startScreen.css";
 import "../../styles/transition.css";
-import bgm from "../../assets/sounds/opening bgm.mp3";
+import bgm from "../../assets/sounds/opening bgm.ogg";
 
 function StartScreen({ onNext, audioRef }) {
   const [clicked, setClicked] = useState(false);

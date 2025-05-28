@@ -8,7 +8,7 @@ import "../../styles/transition.css";
 import "./bugFound.css";
 
 //sound
-import start from "../../assets/sounds/computer start.mp3";
+import start from "../../assets/sounds/computer start.ogg";
 
 function BugFound({ onNext, audioRef }) {
   // 시간 표시

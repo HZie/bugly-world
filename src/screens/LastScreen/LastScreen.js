@@ -8,8 +8,8 @@ import "../../styles/layout.css";
 import "../../styles/typography.css";
 import Window from "../../components/Window";
 
-import complete from "../../assets/sounds/complete.mp3";
-import computerStart from "../../assets/sounds/computer start.mp3";
+import complete from "../../assets/sounds/complete.ogg";
+import computerStart from "../../assets/sounds/computer start.ogg";
 
 const computerStartAudio = new Audio(computerStart);
 computerStartAudio.loop = false;

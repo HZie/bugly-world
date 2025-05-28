@@ -16,3 +16,7 @@
   margin: auto;
   overflow: hidden;
 }
+
+.computer-input {
+  font-size: 2vh;
+}

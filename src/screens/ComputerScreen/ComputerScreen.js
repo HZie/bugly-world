@@ -12,8 +12,8 @@ import Window from "../../components/Window";
 import Buttons from "../../components/Buttons";
 
 // Sound
-import error from "../../assets/sounds/error sound.mp3";
-import shutdown from "../../assets/sounds/shut down.mp3";
+import error from "../../assets/sounds/error sound.ogg";
+import shutdown from "../../assets/sounds/shut down.ogg";
 import Submits from "../../components/Submits";
 
 function ComputerScreen({ onNext }) {
@@ -79,6 +79,7 @@ function ComputerScreen({ onNext }) {
             <input
               type="password"
               value={password}
+              className="computer-input"
               onChange={(e) => {
                 setPassword(e.target.value);
               }}

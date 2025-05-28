@@ -10,9 +10,9 @@ import "./urdyScreen.css";
 import Buttons from "../../components/Buttons";
 
 //sound
-import start from "../../assets/sounds/computer start.mp3";
-import bugSound from "../../assets/sounds/opening bgm.mp3";
-import error from "../../assets/sounds/error sound.mp3";
+import start from "../../assets/sounds/computer start.ogg";
+import bugSound from "../../assets/sounds/opening bgm.ogg";
+import error from "../../assets/sounds/error sound.ogg";
 
 function UrdyScreen({ onNext, audioRef = { current: null } }) {
   const screenRef = useRef(null);
@@ -65,7 +65,7 @@ function UrdyScreen({ onNext, audioRef = { current: null } }) {
           className="quiz-window-urdy"
         >
           <div className="quiz-content">
-            <p>Q. 버그가 많은 세상을 무엇이라고 부르나요?</p>
+            <p>Q. 이 버그의 이름은 무엇인가요?</p>
             {isWrong && (
               <p style={{ color: "red" }}>오답입니다. 다시 시도해주세요.</p>
             )}
@@ -73,13 +73,17 @@ function UrdyScreen({ onNext, audioRef = { current: null } }) {
             <input
               type="text"
               value={answer}
+              className="urdy-input"
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="정답을 입력하세요"
             />
             <div style={{ marginTop: "10px" }}>
               <Buttons
                 onClick={() => {
-                  if (answer.trim() === "UglyWorld") {
+                  if (
+                    answer.trim() === "어디" ||
+                    answer.toLowerCase().trim() === "urdy"
+                  ) {
                     setQuizWindows([]);
 
                     // Stop all audio

@@ -344,3 +344,7 @@
     opacity: 0;
   }
 }
+
+.quiz-answer-input {
+  font-size: 2vh;
+}
