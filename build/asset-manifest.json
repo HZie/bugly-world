@@ -1,27 +1,27 @@
 {
   "files": {
     "main.css": "/bugly-world/static/css/main.625a1393.css",
-    "main.js": "/bugly-world/static/js/main.6a7fa243.js",
-    "static/media/opening bgm.ogg": "/bugly-world/static/media/opening bgm.28cac06fd436964ebad4.ogg",
+    "main.js": "/bugly-world/static/js/main.83f4d5ed.js",
     "static/media/glitched-urdy.gif": "/bugly-world/static/media/glitched-urdy.457f8e0909231bf94896.gif",
     "static/media/glitch-pattern.png": "/bugly-world/static/media/glitch-pattern.cb04d247e13d5b1b9e2c.png",
+    "static/media/opening bgm.ogg": "/bugly-world/static/media/opening bgm.384f4cda7a8c116a51e9.ogg",
+    "static/media/warning.ogg": "/bugly-world/static/media/warning.f4a5fa3bfc16a85f1f09.ogg",
     "static/media/windows-xp-wallpaper.png": "/bugly-world/static/media/windows-xp-wallpaper.0f744c6a6279c9d2d233.png",
-    "static/media/warning.ogg": "/bugly-world/static/media/warning.feece03ec657acc184e9.ogg",
-    "static/media/chasing.ogg": "/bugly-world/static/media/chasing.e6729d6d9244b231b7f0.ogg",
+    "static/media/chasing.ogg": "/bugly-world/static/media/chasing.60b77b762b2ffc7b2074.ogg",
     "static/media/uglyworld_logo.png": "/bugly-world/static/media/uglyworld_logo.75dd7a7dee2c2689cf11.png",
     "static/media/ka1.ttf": "/bugly-world/static/media/ka1.5df8cd545dcd2db2bf8b.ttf",
-    "static/media/computer start.ogg": "/bugly-world/static/media/computer start.c2b293ed412eb45c3d83.ogg",
-    "static/media/complete.ogg": "/bugly-world/static/media/complete.f44853acedd9fee9e635.ogg",
+    "static/media/computer start.ogg": "/bugly-world/static/media/computer start.119550e2e978ee8b548f.ogg",
+    "static/media/complete.ogg": "/bugly-world/static/media/complete.2970dccb2cd9c8a7e7e0.ogg",
+    "static/media/portion.ogg": "/bugly-world/static/media/portion.597b7c29334d41cd4dfa.ogg",
     "static/media/Let's go Digital Regular.ttf": "/bugly-world/static/media/Let's go Digital Regular.2fc1a09a7475c3ab7015.ttf",
-    "static/media/portion.ogg": "/bugly-world/static/media/portion.9c1f23201138530af049.ogg",
-    "static/media/shut down.ogg": "/bugly-world/static/media/shut down.10b738785afb75501c95.ogg",
-    "static/media/error sound.ogg": "/bugly-world/static/media/error sound.42ab43e8754a0983deae.ogg",
+    "static/media/shut down.ogg": "/bugly-world/static/media/shut down.47343b279a1e5ece319c.ogg",
+    "static/media/error sound.ogg": "/bugly-world/static/media/error sound.eaf2159206d7fab2ec47.ogg",
     "index.html": "/bugly-world/index.html",
     "main.625a1393.css.map": "/bugly-world/static/css/main.625a1393.css.map",
-    "main.6a7fa243.js.map": "/bugly-world/static/js/main.6a7fa243.js.map"
+    "main.83f4d5ed.js.map": "/bugly-world/static/js/main.83f4d5ed.js.map"
   },
   "entrypoints": [
     "static/css/main.625a1393.css",
-    "static/js/main.6a7fa243.js"
+    "static/js/main.83f4d5ed.js"
   ]
 }
