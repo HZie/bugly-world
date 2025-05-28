@@ -14,7 +14,7 @@ import computerStart from "../../assets/sounds/computer start.mp3";
 const computerStartAudio = new Audio(computerStart);
 computerStartAudio.loop = false;
 
-function LastScreen() {
+function LastScreen({ onNext }) {
   const { agent } = useAgent();
   const quizState = localStorage.getItem("quizState");
   const agentData = localStorage.getItem("agentCode");
@@ -24,9 +24,18 @@ function LastScreen() {
   const se_complete = new Audio(complete);
   se_complete.play();
   localStorage.clear();
+
+  const handleClose = () => {
+    localStorage.clear();
+    onNext();
+  };
   return (
     <div className="lastScreen" ref={screenRef}>
-      <Window title="UglyWorld in_BUG" parentRef={screenRef}>
+      <Window
+        title="UglyWorld in_BUG"
+        onClose={handleClose}
+        parentRef={screenRef}
+      >
         <p>
           버그가 모두 사라졌습니다.
           <br />

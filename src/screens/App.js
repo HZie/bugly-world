@@ -131,7 +131,7 @@ function App() {
       currentScreen = <GoingBack onNext={() => setScreen("startScreen")} />;
       break;
     case "lastScreen":
-      currentScreen = <LastScreen />;
+      currentScreen = <LastScreen onNext={setScreen("startScreen")} />;
       break;
     default:
       currentScreen = <div onClick={() => setScreen("startScreen")}>404</div>;
