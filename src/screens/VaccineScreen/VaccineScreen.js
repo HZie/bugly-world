@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { useAgent } from "../../contexts/AgentContext";
 
@@ -28,77 +28,60 @@ function VaccineScreen({ onNext }) {
   const [bgOpacity, setBgOpacity] = useState(0);
   const [accessGranted, setAccessGranted] = useState(false);
   const [flashOverlay, setFlashOverlay] = useState(false);
-  const [audioPlayed, setAudioPlayed] = useState(false);
+  const audioPlayedRef = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setVisible(true);
     }, 800);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
   useEffect(() => {
     if (!visible) return;
 
-    let frame = 1;
-    let delay = 300; // 시작 간격 (ms)
-    let timeoutId;
+    const startTimestamp = performance.now();
+    const initialTime = new Date();
 
-    const tick = () => {
-      if (!audioPlayed) {
+    audioPlayedRef.current = false; // reset on each effect run
+
+    const tick = (now) => {
+      const elapsed = now - startTimestamp;
+
+      const acceleration = 1.03;
+      const power = elapsed / 10;
+      const acceleratedElapsed = (Math.pow(acceleration, power) - 1) * 1000;
+      const nextTime = new Date(initialTime.getTime() - acceleratedElapsed);
+
+      if (!audioPlayedRef.current) {
         chasingAudio.play();
-        setAudioPlayed(true);
+        audioPlayedRef.current = true;
       }
 
-      setTime((prev) => {
-        const next = new Date(prev.getTime() - 1000 * frame); // 1초 감소
-        if (next <= TARGET_TIME) {
-          chasingAudio.pause();
-          chasingAudio.currentTime = 0;
-          warningAudio.play();
+      const progress = elapsed / 13000;
+      setBgOpacity(Math.min(progress, 0.9));
 
-          clearTimeout(timeoutId);
-          setAccessGranted(true);
-          setFlashOverlay(true);
-          // setTimeout(() => setFlashOverlay(false), 1000);
-          return TARGET_TIME;
-        }
+      if (nextTime <= TARGET_TIME) {
+        chasingAudio.pause();
+        chasingAudio.currentTime = 0;
+        warningAudio.play();
+        setTime(TARGET_TIME);
+        setAccessGranted(true);
+        setFlashOverlay(true);
+        return;
+      }
 
-        return next;
-      });
-      // 호출 간격 줄이기 (더 빠르게 감소)
-      frame = frame * 1.01;
-      delay = delay / frame;
-      timeoutId = setTimeout(tick, delay);
+      setTime(nextTime);
+      requestAnimationFrame(tick);
     };
-    timeoutId = setTimeout(tick, delay);
+
+    const frameId = requestAnimationFrame(tick);
 
     return () => {
-      clearTimeout(timeoutId);
+      cancelAnimationFrame(frameId);
       warningAudio.pause();
       warningAudio.currentTime = 0;
     };
-  }, [visible, onNext]);
-
-  useEffect(() => {
-    if (!visible) return;
-
-    const start = Date.now();
-    const fixedDuration = 13000; // 💡 5초 동안 opacity 0 → 1
-
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const elapsed = now - start;
-      const progress = elapsed / fixedDuration;
-
-      setBgOpacity(Math.min(progress, 0.9));
-
-      if (progress >= 1) {
-        clearInterval(interval);
-      }
-    }, 50);
-
-    return () => clearInterval(interval);
   }, [visible]);
 
   /*

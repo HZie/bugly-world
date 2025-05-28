@@ -13,6 +13,7 @@ import error from "../../assets/sounds/error sound.ogg";
 import portion from "../../assets/sounds/portion.ogg";
 import success from "../../assets/sounds/complete.ogg";
 import warning from "../../assets/sounds/warning.ogg";
+import computerStart from "../../assets/sounds/computer start.ogg";
 
 // folder
 import activatedImg from "../../assets/images/activated-folder.png";
@@ -47,6 +48,13 @@ function MainScreen({ onNext }) {
   const [showOverlay, setShowOverlay] = useState(false);
   // Ref for warning audio
   const warningAudioRef = useRef(null);
+
+  // Play computer start audio once on mount
+  useEffect(() => {
+    const audio = new Audio(computerStart);
+    audio.loop = false;
+    audio.play();
+  }, []);
 
   const bugCount = 150;
   const bugDataRef = useRef(

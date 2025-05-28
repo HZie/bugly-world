@@ -49,6 +49,8 @@ function App() {
     const preloadAudio = (src) => {
       const audio = new Audio();
       audio.src = src;
+      audio.preload = "auto";
+      audio.load();
     };
 
     const preloadImage = (src) => {
@@ -57,15 +59,15 @@ function App() {
     };
 
     // 오디오 프리로드
-    preloadAudio("/assets/sounds/warning.mp3");
-    preloadAudio("/assets/sounds/error sound.mp3");
-    preloadAudio("/assets/sounds/opening bgm.mp3");
-    preloadAudio("/assets/sounds/computer start.mp3");
-    preloadAudio("/assets/sounds/chasing.mp3");
-    preloadAudio("/assets/sounds/complete.mp3");
-    preloadAudio("/assets/sounds/mouse click.mp3");
-    preloadAudio("/assets/sounds/portion.mp3");
-    preloadAudio("/assets/sounds/shut down.mp3");
+    preloadAudio("/assets/sounds/warning.ogg");
+    preloadAudio("/assets/sounds/error sound.ogg");
+    preloadAudio("/assets/sounds/opening bgm.ogg");
+    preloadAudio("/assets/sounds/computer start.ogg");
+    preloadAudio("/assets/sounds/chasing.ogg");
+    preloadAudio("/assets/sounds/complete.ogg");
+    preloadAudio("/assets/sounds/mouse click.ogg");
+    preloadAudio("/assets/sounds/portion.ogg");
+    preloadAudio("/assets/sounds/shut down.ogg");
 
     // 이미지 프리로드 (예시)
     preloadImage("/assets/images/activated-folder.png");

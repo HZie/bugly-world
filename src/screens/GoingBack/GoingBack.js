@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { useAgent } from "../../contexts/AgentContext";
 
@@ -9,12 +9,13 @@ import "../../styles/typography.css";
 import warning from "../../assets/sounds/warning.ogg";
 import chasing from "../../assets/sounds/chasing.ogg";
 import computerStart from "../../assets/sounds/computer start.ogg";
+import ding from "../../assets/sounds/elevator-ding.ogg";
 
 const chasingAudio = new Audio(chasing);
 
 const TARGET_TIME = new Date();
 
-const warningAudio = new Audio(warning);
+const dingAudio = new Audio(ding);
 const computerStartAudio = new Audio(computerStart);
 computerStartAudio.loop = false;
 
@@ -36,43 +37,54 @@ function GoingBack({ onNext }) {
     return () => clearTimeout(timer);
   });
 
+  // Ref to prevent audio from playing multiple times
+  const audioPlayedRef = useRef(false);
+
   useEffect(() => {
     if (!visible) return;
 
-    let frame = 1;
-    let delay = 300; // 시작 간격 (ms)
-    let timeoutId;
+    const startTimestamp = performance.now();
+    const initialTime = new Date(time.getTime());
 
-    const tick = () => {
-      chasingAudio.play();
+    audioPlayedRef.current = false; // reset on each effect run
 
-      setTime((prev) => {
-        const next = new Date(prev.getTime() + 1000 * frame); // 1초 감소
-        if (next >= TARGET_TIME) {
-          chasingAudio.pause();
-          chasingAudio.currentTime = 0;
-          //warningAudio.play();
+    // 점점 빠르게 시간 흐름이 가속되는 tick 함수
+    const tick = (now) => {
+      const elapsed = now - startTimestamp;
+      // 프레임마다 속도가 증가하도록 가속 로직 적용
+      // 예: 시간 흐름 = elapsed^가속도계수 (2 이상이면 점점 더 빠름)
+      // 또는, 누적된 시간에 대해 지수적으로 증가
+      // 아래는 1.015^(elapsed/10)로 가속 (튜닝 가능)
+      const acceleration = 1.03; // 가속 계수 (조정 가능)
+      const power = elapsed / 10; // 분모가 작을수록 더 빠름
+      const acceleratedElapsed = (Math.pow(acceleration, power) - 1) * 1000; // 0에서 시작, 점점 빨라짐
+      const nextTime = new Date(initialTime.getTime() + acceleratedElapsed);
 
-          clearTimeout(timeoutId);
-          setAccessGranted(true);
-          setFlashOverlay(true);
-          // setTimeout(() => setFlashOverlay(false), 1000);
-          return TARGET_TIME;
-        }
+      if (!audioPlayedRef.current) {
+        chasingAudio.play();
+        audioPlayedRef.current = true;
+      }
 
-        return next;
-      });
-      // 호출 간격 줄이기 (더 빠르게 감소)
-      frame = frame * 1.01;
-      delay = delay / frame;
-      timeoutId = setTimeout(tick, delay);
+      if (nextTime >= TARGET_TIME) {
+        chasingAudio.pause();
+        chasingAudio.currentTime = 0;
+        dingAudio.play();
+        setTime(TARGET_TIME);
+        setAccessGranted(true);
+        setFlashOverlay(true);
+        return;
+      }
+
+      setTime(nextTime);
+      requestAnimationFrame(tick);
     };
-    timeoutId = setTimeout(tick, delay);
+
+    const frameId = requestAnimationFrame(tick);
 
     return () => {
-      clearTimeout(timeoutId);
-      warningAudio.pause();
-      warningAudio.currentTime = 0;
+      cancelAnimationFrame(frameId);
+      dingAudio.pause();
+      dingAudio.currentTime = 0;
     };
   }, [visible, onNext]);
 
@@ -124,18 +136,18 @@ function GoingBack({ onNext }) {
   const seconds = ss; // ss
 
   const handleClick = () => {
-    // Attempt to unlock warningAudio on mobile
-    warningAudio
+    // Attempt to unlock dingAudio on mobile
+    dingAudio
       .play()
       .then(() => {
-        warningAudio.pause();
-        warningAudio.currentTime = 0;
+        dingAudio.pause();
+        dingAudio.currentTime = 0;
       })
       .catch(() => {});
 
     if (accessGranted) {
-      warningAudio.pause();
-      warningAudio.currentTime = 0;
+      dingAudio.pause();
+      dingAudio.currentTime = 0;
       chasingAudio.pause();
       chasingAudio.currentTime = 0;
       computerStartAudio.pause();

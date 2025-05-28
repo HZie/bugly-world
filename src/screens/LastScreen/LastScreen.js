@@ -9,10 +9,6 @@ import "../../styles/typography.css";
 import Window from "../../components/Window";
 
 import complete from "../../assets/sounds/complete.ogg";
-import computerStart from "../../assets/sounds/computer start.ogg";
-
-const computerStartAudio = new Audio(computerStart);
-computerStartAudio.loop = false;
 
 function LastScreen({ onNext }) {
   const quizState = localStorage.getItem("quizState");
