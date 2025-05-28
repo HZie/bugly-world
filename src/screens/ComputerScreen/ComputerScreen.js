@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from "react";
 import { useAgent } from "../../contexts/AgentContext";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
-import { hashPassword } from "../../utils/hash";
 
 import "../../styles/layout.css";
 import "../../styles/transition.css";
@@ -30,12 +29,9 @@ function ComputerScreen({ onNext }) {
 
   async function handleLoginSubmit(e) {
     e.preventDefault();
-    const hashed = await hashPassword(password);
+    const hashed = password;
 
-    const q = query(
-      collection(db, "agents"),
-      where("passwordHash", "==", hashed)
-    );
+    const q = query(collection(db, "agents"), where("agentId", "==", hashed));
     const snapshot = await getDocs(q);
 
     if (!snapshot.empty) {
