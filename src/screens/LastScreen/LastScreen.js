@@ -23,7 +23,7 @@ function LastScreen() {
 
   const se_complete = new Audio(complete);
   se_complete.play();
-
+  localStorage.clear();
   return (
     <div className="lastScreen" ref={screenRef}>
       <Window title="UglyWorld in_BUG" parentRef={screenRef}>
