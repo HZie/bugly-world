@@ -12,6 +12,7 @@ import quizData from "../../assets/data/quizzes.json";
 import error from "../../assets/sounds/error sound.mp3";
 import portion from "../../assets/sounds/portion.mp3";
 import success from "../../assets/sounds/complete.mp3";
+import warning from "../../assets/sounds/warning.mp3";
 
 // folder
 import activatedImg from "../../assets/images/activated-folder.png";
@@ -24,7 +25,7 @@ function MainScreen({ onNext }) {
   const [windows, setWindows] = useState([]);
   const [visibleFolderIndex, setVisibleFolderIndex] = useState(0);
   const [bugRemovalIndex, setBugRemovalIndex] = useState(0);
-  const [solvedLevels, setSolvedLevels] = useState([]);
+  const [solvedLevels, setSolvedLevels] = useState({});
   const [currentLevel, setCurrentLevel] = useState(1);
   const [minesweeperVisible, setMinesweeperVisible] = useState(false);
   const [grid, setGrid] = useState([]);
@@ -44,6 +45,8 @@ function MainScreen({ onNext }) {
   const nextWindowId = useRef(0);
   // Overlay state
   const [showOverlay, setShowOverlay] = useState(false);
+  // Ref for warning audio
+  const warningAudioRef = useRef(null);
 
   const bugCount = 150;
   const bugDataRef = useRef(
@@ -171,23 +174,41 @@ function MainScreen({ onNext }) {
     setWindows((prev) => prev.filter((win) => win.id !== id));
   }
 
-  function handleMinesweeperSuccess(level) {
+  function handleMinesweeperSuccess(level, resultState) {
     setBugRemovalIndex((prev) =>
       level === 4
         ? bugCount
         : Math.min(prev + Math.floor(bugCount / 8), bugCount)
     );
-    setSolvedLevels((prev) => [...new Set([...prev, level])]);
     setVisibleFolderIndex((prev) => Math.max(prev, level));
 
-    // Update gameState based on skippedThisLevel
-    setGameState(skippedThisLevel ? "hmm" : "cool");
+    // If this level was skipped at any point, always record "hmm"
+    const finalState = skippedThisLevel ? "hmm" : resultState;
+
+    setSolvedLevels((prev) => {
+      if (prev[level]) {
+        setGameState(prev[level]); // restore previous state
+        return prev;
+      }
+      setGameState(finalState);
+      return {
+        ...prev,
+        [level]: finalState,
+      };
+    });
+
+    // Update agent state after solvedLevels update
+    const allStates = Object.values({ ...solvedLevels, [level]: finalState });
+    if (allStates.includes("hmm")) {
+      localStorage.setItem("quizState", "hmm");
+    } else if (allStates.length === 4 && allStates.every((s) => s === "cool")) {
+      localStorage.setItem("quizState", "cool");
+    }
   }
 
   function onSuccess(state) {
     console.log("Minesweeper 성공!");
-    handleMinesweeperSuccess(currentLevel);
-    setGameState(state);
+    handleMinesweeperSuccess(currentLevel, state);
     setTimeout(() => {
       setShowOverlay(true);
       new Audio(success).play();
@@ -221,6 +242,8 @@ function MainScreen({ onNext }) {
         if (levelQuizzes && levelQuizzes.length > 0) {
           setCurrentQuiz(levelQuizzes[flagIndex % levelQuizzes.length]);
           setShowWrongMessage(false);
+          setWrongAttempts(0);
+          setShowHint(false); // Reset state
           setQuizVisible(true); // 퀴즈 모달 열기
           if (wrongAttempts >= 3) setShowHint(true);
           se_error.play();
@@ -306,6 +329,24 @@ function MainScreen({ onNext }) {
     }
   };
 
+  // Play warning sound when all levels are solved
+  useEffect(() => {
+    if (Object.keys(solvedLevels).length === 4) {
+      const audio = new Audio(warning);
+      warningAudioRef.current = audio;
+      audio.play();
+    }
+  }, [solvedLevels]);
+
+  // Handler for final icon click: stops audio and proceeds
+  function handleFinalIconClick() {
+    if (warningAudioRef.current) {
+      warningAudioRef.current.pause();
+      warningAudioRef.current.currentTime = 0;
+    }
+    onNext();
+  }
+
   return (
     <div className={`main-screen pre-fade ${fadeIn}`}>
       <div className="main-screen__bug-background">
@@ -314,36 +355,42 @@ function MainScreen({ onNext }) {
           {["시간여행", "우주여행", "지구여행", "바다여행"].map(
             (label, index) => {
               const isActive = index <= visibleFolderIndex;
-              const isSolved = solvedLevels.includes(index + 1);
+              const status = solvedLevels[index + 1];
               return (
                 <div key={index} className="folder-wrapper">
                   <button
                     className="folder-button"
                     onClick={() =>
-                      isActive &&
-                      !isSolved &&
-                      handleFolderClick(label, index + 1)
+                      isActive && !status && handleFolderClick(label, index + 1)
                     }
-                    disabled={!isActive || isSolved}
+                    disabled={!isActive || status}
                   >
                     <img
                       src={isActive ? activatedImg : inactivatedImg}
                       alt={`${label} folder`}
                       className="folder-icon"
                     />
-                    {isSolved &&
-                      (currentLevel === index + 1 && skippedThisLevel ? (
-                        <span className="cool-icon">😐</span>
-                      ) : (
-                        <span className="cool-icon">😎</span>
-                      ))}
+                    {status && (
+                      <span className="cool-icon">
+                        {status === "cool"
+                          ? "😎"
+                          : status === "hmm"
+                          ? "😐"
+                          : ""}
+                      </span>
+                    )}
                   </button>
-                  <span onClick={onNext}>{label}</span>
+                  <span>{label}</span>
                 </div>
               );
             }
           )}
         </div>
+        {Object.keys(solvedLevels).length === 4 && (
+          <div className="final-icon" onClick={handleFinalIconClick}>
+            ⚠️
+          </div>
+        )}
         {minesweeperVisible && (
           <Window
             title={`Minesweeper Level ${currentLevel}`}
@@ -472,6 +519,7 @@ function MainScreen({ onNext }) {
                               setSkippedFlags((prev) => [...prev, `${i}-${j}`]);
                               setGameState("hmm");
                               setSkippedThisLevel(true);
+                              new Audio(portion).play();
                               if (setSkippedCount)
                                 setSkippedCount((prev) => prev + 1);
                               return {

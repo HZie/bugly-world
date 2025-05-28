@@ -1,5 +1,6 @@
 // src/utils/hash.js
 export async function hashPassword(password) {
+  localStorage.setItem("agentCode", password);
   const encoder = new TextEncoder();
   const data = encoder.encode(password);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);

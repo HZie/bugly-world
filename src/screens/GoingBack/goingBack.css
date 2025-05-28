@@ -1,0 +1,81 @@
+.going-back {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.vaccine__analyze {
+  color: white;
+}
+
+.going-back > .bg-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("../../assets/images/windows-xp-wallpaper.png"); /* 이미지 경로 교체 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.2s linear;
+  z-index: 0;
+}
+
+.bug-hunting {
+  color: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bug-hunting.hidden {
+  opacity: 0;
+  transform: scale(1.2);
+  transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+}
+
+/* visible 되면 팍 뜨게 */
+.bug-hunting.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.bug-hunting > .overlay {
+  color: white;
+  margin: 5vh;
+  z-index: 1;
+  background-color: rgba(255, 0, 0, 0.9);
+  border-radius: 0;
+}
+
+.access__message {
+  position: absolute;
+  margin-top: 30vh;
+  font-size: 3vh;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 1vh 2vh;
+  border-radius: 8px;
+  transition: opacity 0.5s ease;
+}
+
+.flash {
+  animation: flashOverlay 0.5s alternate infinite;
+  animation-fill-mode: both;
+}
+
+@keyframes flashOverlay {
+  0% {
+    background-color: rgba(255, 0, 0, 0.9);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+}

@@ -83,3 +83,8 @@
 .main-screen__screen {
   position: relative;
 }
+
+.quiz-window-urdy .window-header {
+  background-color: red;
+  color: white;
+}

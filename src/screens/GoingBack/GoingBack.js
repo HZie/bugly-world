@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useAgent } from "../../contexts/AgentContext";
 
-import "./vaccineScreen.css";
+import "./goingBack.css";
 import "../../styles/global.css";
 import "../../styles/layout.css";
 import "../../styles/typography.css";
@@ -12,17 +12,17 @@ import computerStart from "../../assets/sounds/computer start.mp3";
 
 const chasingAudio = new Audio(chasing);
 
-const TARGET_TIME = new Date("2000-01-01T00:00:00");
+const TARGET_TIME = new Date();
 
 const warningAudio = new Audio(warning);
 const computerStartAudio = new Audio(computerStart);
 computerStartAudio.loop = false;
 
-function VaccineScreen({ onNext }) {
+function GoingBack({ onNext }) {
   const { agent } = useAgent();
   //console.log(agent);
   // 시간 표시
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState(new Date("2000-01-01T00:00:00"));
   // 시간 팍 뜨게 하기
   const [visible, setVisible] = useState(false);
   const [bgOpacity, setBgOpacity] = useState(0);
@@ -47,9 +47,9 @@ function VaccineScreen({ onNext }) {
       chasingAudio.play();
 
       setTime((prev) => {
-        const next = new Date(prev.getTime() - 1000 * frame); // 1초 감소
-        if (next <= TARGET_TIME) {
-          warningAudio.play();
+        const next = new Date(prev.getTime() + 1000 * frame); // 1초 감소
+        if (next >= TARGET_TIME) {
+          //warningAudio.play();
 
           clearTimeout(timeoutId);
           setAccessGranted(true);
@@ -145,14 +145,18 @@ function VaccineScreen({ onNext }) {
   };
 
   return (
-    <div className="vaccineScreen" onClick={handleClick}>
+    <div className="going-back" onClick={handleClick}>
       <div className="bg-layer" style={{ opacity: bgOpacity }} />
       <div className={`bug-hunting ${visible ? "visible" : "hidden"}`}>
         <div
           className={`overlay ${flashOverlay ? "flash" : ""}`}
           style={{ backgroundColor: `rgba(255, 20, 0,${bgOpacity * 0.8})` }}
         >
-          <div className="warning">버그 추적 중</div>
+          <div className="warning">
+            원래 시간대로
+            <br />
+            돌아갑니다.
+          </div>
           <div className="date time-mono">
             {formattedDate.split("").map((char, i) => (
               <span key={i}>{char}</span>
@@ -172,16 +176,9 @@ function VaccineScreen({ onNext }) {
             </span>
           </div>
         </div>
-        {accessGranted && (
-          <div className="access__message">
-            요원에게 권한을 부여합니다.
-            <br />
-            웜홀로 입장해주십시오.
-          </div>
-        )}
       </div>
     </div>
   );
 }
 
-export default VaccineScreen;
+export default GoingBack;

@@ -8,6 +8,7 @@ function Window({
   onClick,
   onClose,
   isActive = "",
+  className = "",
 }) {
   const windowRef = useRef(null);
   const isDraggingRef = useRef(false);
@@ -195,7 +196,7 @@ function Window({
   return (
     <div
       ref={windowRef}
-      className={`window ${isActive}`}
+      className={`window ${isActive} ${className}`}
       style={{
         top: `${pos.top}px`,
         left: `${pos.left}px`,

@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import BugFound from "./BugFound/BugFound";
 import ComputerScreen from "./ComputerScreen/ComputerScreen";
 import StartScreen from "./StartScreen/StartScreen";
-
-// styles
 import "../styles/transition.css";
 import VaccineScreen from "./VaccineScreen/VaccineScreen";
 import MainScreen from "./MainScreen/MainScreen";
+import UrdyScreen from "./UrdyScreen/UrdyScreen";
+import GoingBack from "./GoingBack/GoingBack";
+import LastScreen from "./LastScreen/LastScreen";
 //import AccessGrantedScreen from "./AccessGrantedScreen/AccessGrantedScreen";
 //import EntranceScreen from "./EntranceScreen/EntranceScreen";
 
@@ -107,7 +108,7 @@ function App() {
       currentScreen = <VaccineScreen onNext={() => setScreen("mainScreen")} />;
       break;
     case "mainScreen":
-      currentScreen = <MainScreen onNext={() => setScreen("startScreen")} />;
+      currentScreen = <MainScreen onNext={() => setScreen("urdyScreen")} />;
       break;
     /*
     case "accessGrantedScreen":
@@ -123,9 +124,17 @@ function App() {
       );
       break;
       */
+    case "urdyScreen":
+      currentScreen = <UrdyScreen onNext={() => setScreen("goingBack")} />;
+      break;
+    case "goingBack":
+      currentScreen = <GoingBack onNext={() => setScreen("startScreen")} />;
+      break;
+    case "lastScreen":
+      currentScreen = <LastScreen />;
+      break;
     default:
       currentScreen = <div onClick={() => setScreen("startScreen")}>404</div>;
-      console.log("hello world");
   }
 
   return (

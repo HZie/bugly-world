@@ -1,0 +1,13 @@
+.urdy-screen {
+  background-image: url(../../assets/images/glitched-urdy.gif);
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
