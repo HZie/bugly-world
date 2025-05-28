@@ -140,8 +140,8 @@ function GoingBack({ onNext }) {
       computerStartAudio.currentTime = 0;
 
       computerStartAudio.play();
-      onNext();
     }
+    onNext();
   };
 
   return (

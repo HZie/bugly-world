@@ -128,10 +128,10 @@ function App() {
       currentScreen = <UrdyScreen onNext={() => setScreen("goingBack")} />;
       break;
     case "goingBack":
-      currentScreen = <GoingBack onNext={() => setScreen("startScreen")} />;
+      currentScreen = <GoingBack onNext={() => setScreen("lastScreen")} />;
       break;
     case "lastScreen":
-      currentScreen = <LastScreen onNext={setScreen("startScreen")} />;
+      currentScreen = <LastScreen onNext={() => setScreen("startScreen")} />;
       break;
     default:
       currentScreen = <div onClick={() => setScreen("startScreen")}>404</div>;

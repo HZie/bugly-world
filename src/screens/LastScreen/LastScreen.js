@@ -15,7 +15,6 @@ const computerStartAudio = new Audio(computerStart);
 computerStartAudio.loop = false;
 
 function LastScreen({ onNext }) {
-  const { agent } = useAgent();
   const quizState = localStorage.getItem("quizState");
   const agentData = localStorage.getItem("agentCode");
 
