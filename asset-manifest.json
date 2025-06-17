@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/bugly-world/static/css/main.625a1393.css",
-    "main.js": "/bugly-world/static/js/main.59382b6f.js",
+    "main.css": "/bugly-world/static/css/main.45c52876.css",
+    "main.js": "/bugly-world/static/js/main.900b186f.js",
     "static/media/glitched-urdy.gif": "/bugly-world/static/media/glitched-urdy.457f8e0909231bf94896.gif",
     "static/media/glitch-pattern.png": "/bugly-world/static/media/glitch-pattern.cb04d247e13d5b1b9e2c.png",
     "static/media/opening bgm.ogg": "/bugly-world/static/media/opening bgm.384f4cda7a8c116a51e9.ogg",
@@ -10,6 +10,7 @@
     "static/media/chasing.ogg": "/bugly-world/static/media/chasing.60b77b762b2ffc7b2074.ogg",
     "static/media/uglyworld_logo.png": "/bugly-world/static/media/uglyworld_logo.75dd7a7dee2c2689cf11.png",
     "static/media/ka1.ttf": "/bugly-world/static/media/ka1.5df8cd545dcd2db2bf8b.ttf",
+    "static/media/urdy_icon.png": "/bugly-world/static/media/urdy_icon.d076d53e7e6caeb7b94e.png",
     "static/media/computer start.ogg": "/bugly-world/static/media/computer start.119550e2e978ee8b548f.ogg",
     "static/media/elevator-ding.ogg": "/bugly-world/static/media/elevator-ding.4b69c3f7b8e7902a57fb.ogg",
     "static/media/complete.ogg": "/bugly-world/static/media/complete.2970dccb2cd9c8a7e7e0.ogg",
@@ -18,11 +19,11 @@
     "static/media/shut down.ogg": "/bugly-world/static/media/shut down.47343b279a1e5ece319c.ogg",
     "static/media/error sound.ogg": "/bugly-world/static/media/error sound.eaf2159206d7fab2ec47.ogg",
     "index.html": "/bugly-world/index.html",
-    "main.625a1393.css.map": "/bugly-world/static/css/main.625a1393.css.map",
-    "main.59382b6f.js.map": "/bugly-world/static/js/main.59382b6f.js.map"
+    "main.45c52876.css.map": "/bugly-world/static/css/main.45c52876.css.map",
+    "main.900b186f.js.map": "/bugly-world/static/js/main.900b186f.js.map"
   },
   "entrypoints": [
-    "static/css/main.625a1393.css",
-    "static/js/main.59382b6f.js"
+    "static/css/main.45c52876.css",
+    "static/js/main.900b186f.js"
   ]
 }
