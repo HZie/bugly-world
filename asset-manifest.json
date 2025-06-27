@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/bugly-world/static/css/main.73d83f16.css",
-    "main.js": "/bugly-world/static/js/main.ed1b3902.js",
+    "main.js": "/bugly-world/static/js/main.23866326.js",
     "static/media/wormhole.jpeg": "/bugly-world/static/media/wormhole.126fee9864133fbd622f.jpeg",
     "static/media/glitched-urdy.gif": "/bugly-world/static/media/glitched-urdy.457f8e0909231bf94896.gif",
     "static/media/main_background.jpeg": "/bugly-world/static/media/main_background.6b0695e514db37a905e2.jpeg",
@@ -51,10 +51,10 @@
     "static/media/hmm.ogg": "/bugly-world/static/media/hmm.3d8b9c72455e74de7f78.ogg",
     "index.html": "/bugly-world/index.html",
     "main.73d83f16.css.map": "/bugly-world/static/css/main.73d83f16.css.map",
-    "main.ed1b3902.js.map": "/bugly-world/static/js/main.ed1b3902.js.map"
+    "main.23866326.js.map": "/bugly-world/static/js/main.23866326.js.map"
   },
   "entrypoints": [
     "static/css/main.73d83f16.css",
-    "static/js/main.ed1b3902.js"
+    "static/js/main.23866326.js"
   ]
 }
