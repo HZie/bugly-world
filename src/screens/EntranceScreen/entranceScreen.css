@@ -1,2 +1,28 @@
 .entranceScreen {
+  background-image: url(../../assets/images/wormhole.jpeg);
+  background-size: cover;
+  background-position: center;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.entranceScreen > .window-content {
+  font-size: 2.5vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.entrance__story-buttons {
+  margin: 0;
+  padding: 0;
+  justify-self: center;
 }

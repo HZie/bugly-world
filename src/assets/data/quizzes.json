@@ -2,60 +2,72 @@
   "levels": {
     "1": [
       {
-        "question": "1번 문제 - 첫 번째 퀴즈",
-        "answer": "1234",
-        "hint": "디버깅에 사용됩니다."
+        "title": "Mission Level 1",
+        "image": "img1",
+        "question": [
+          "문제: 버거집에 방문한 할머니는 버거를 먹을 수 없었습니다. 그 이유는 무엇일까요? \n1) 버거 가격을 알 수 없어서 \n2) 기계를 사용할 수 없어서 \n3)아이스크림이 나와서 \n4) 눈이 침침해서 \n(정답 번호만 적어주세요)"
+        ],
+        "answer": "2"
       }
     ],
     "2": [
       {
-        "question": "2번 문제 - 첫 번째 퀴즈",
-        "answer": "1234",
-        "hint": "HTML이 대표적입니다."
+        "title": "Mission Level 2-1",
+        "image": "img2",
+        "question": "‘Soda Pop World’에는 이 곤충이 마스코트라고 합니다. 이 곤충은 무엇일까요?",
+        "answer": ["모기", "mosquito"]
       },
       {
-        "question": "2번 문제 - 두 번째 퀴즈",
-        "answer": "1234",
-        "hint": "웹 페이지 구조와 관련 있습니다."
+        "title": "Mission Level 2-2",
+        "image": "img3",
+        "question": "이 놀이기구는 엄마가 매우 싫어한다고 하는데요, 엄마가 이것 두 개를 섞지 말라는 메모를 남겼습니다. 이것 두 개는 무엇인가요?",
+        "answer": "coca-cola&mentos"
       }
     ],
     "3": [
       {
-        "question": "3번 문제 - 첫 번째 퀴즈",
-        "answer": "1234",
-        "hint": "스타일과 관련 있어요."
+        "title": "Mission Level 3-1",
+        "image": "img6",
+        "question": "바이러스로부터 지구를 떠나 깨끗한 화성으로 정착한 지구인들. 그들은 그 지역을 ‘0000 00000 0000’이라 불렀습니다. 그 이름은 무엇일까요?",
+        "answer": "zerovirusarea"
       },
       {
-        "question": "3번 문제 - 두 번째 퀴즈",
-        "answer": "1234",
-        "hint": "스타일과 관련 있어요."
+        "title": "Mission Level 3-2",
+        "image": "img8",
+        "question": "‘Zero Virus Area’ 입구를 지나는 사람들이 보입니다. 그런데 무리에 빠져나온 누군가 이 상황이 이상하다고 생각합니다. 그 사람이 가르키는 방향은 오른쪽, 왼쪽, 위, 아래 중 어느 방향인가요?",
+        "answer": "오른쪽"
       },
       {
-        "question": "3번 문제 - 세 번째 퀴즈",
-        "answer": "1234",
-        "hint": "스타일과 관련 있어요."
+        "title": "Mission Level 3-3",
+        "image": "img10",
+        "question": "여러 상상의 세계를 지나는 이 롤러코스터는 우리의 ‘사회’를 상징하는 이 재료 위에 만들어졌는데요. UglyWorld가 주로 작품을 만들 때 소나무 나무패널 위에 맨 처음 사용하는 재료이기도 한 이 재료는 무엇일까요?",
+        "answer": "신문"
       }
     ],
     "4": [
       {
-        "question": "4번 문제 - 첫 번째 퀴즈",
-        "answer": "1234",
-        "hint": "브라우저에서 동작하는 인터랙티브한 기능 제공."
+        "title": "Mission Level 4-1",
+        "image": "img11",
+        "question": "저의 이름은 무엇일까요?",
+        "answer": ["주이어글리월드", "juieeuglyworld"]
       },
       {
-        "question": "4번 문제 - 두 번째 퀴즈",
-        "answer": "1234",
-        "hint": "스타일과 관련 있어요."
+        "title": "Mission Level 4-2",
+        "image": "img12",
+        "question": "다음 그림에는 주이 어글리월드와 UglyWorld를 만든 다른 자아가 표현되어 있습니다. UglyWorld를 만든 이 그림자 자아는 어느 쪽으로 달리고 있나요?",
+        "answer": "오른쪽"
       },
       {
-        "question": "4번 문제 - 세 번째 퀴즈",
-        "answer": "1234",
-        "hint": "스타일과 관련 있어요."
+        "title": "Mission Level 4-3",
+        "image": "img13",
+        "question": "UglyWorld는 ‘이것’을 상징적으로 놀이동산에서 보내는 ‘하룻밤’ 또는 ‘긴 꿈’으로 표현했는데요. 이것은 무엇일까요?",
+        "answer": "일생"
       },
       {
-        "question": "4번 문제 - 네 번째 퀴즈",
-        "answer": "1234",
-        "hint": "스타일과 관련 있어요."
+        "title": "Mission Level 4-4",
+        "image": "img13",
+        "question": "크게 NIGHT과 DAY로 나눠진 UglyWorld. 그중 BUG는 어느 쪽에 해당하는 세계일까요?",
+        "answer": "day"
       }
     ]
   }

@@ -6,15 +6,27 @@ import ComputerScreen from "./ComputerScreen/ComputerScreen";
 import StartScreen from "./StartScreen/StartScreen";
 import "../styles/transition.css";
 import VaccineScreen from "./VaccineScreen/VaccineScreen";
+import EntranceScreen from "./EntranceScreen/EntranceScreen";
+import FirstQuiz from "./FirstQuiz/FirstQuiz";
 import MainScreen from "./MainScreen/MainScreen";
 import UrdyScreen from "./UrdyScreen/UrdyScreen";
+import AfterUrdy from "./AfterUrdy/AfterUrdy";
+import BeforeCredit from "./BeforeCredit/BeforeCredit";
+import CreditScreen from "./CreditScreen/CreditScreen";
 import GoingBack from "./GoingBack/GoingBack";
 import LastScreen from "./LastScreen/LastScreen";
 //import AccessGrantedScreen from "./AccessGrantedScreen/AccessGrantedScreen";
 //import EntranceScreen from "./EntranceScreen/EntranceScreen";
 
+import map1 from "../assets/images/map-1.png";
+import map2 from "../assets/images/map-2.png";
+import map3 from "../assets/images/map-3.png";
+import map4 from "../assets/images/map-4.png";
+
 function App() {
   const [screen, setScreen] = useState("startScreen");
+  const [mapVisible, setMapVisible] = useState(false);
+  const [map, setMap] = useState(map1);
   const audioRef = useRef(null);
 
   const handleEnterFullScreen = async () => {
@@ -78,7 +90,32 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (screen == null) setScreen("startScreen");
     localStorage.setItem("lastScreen", screen);
+  }, [screen]);
+
+  useEffect(() => {
+    if (screen === "entranceScreen") {
+      setMap(map2);
+    } else if (
+      screen === "startScreen" ||
+      screen === "bugFound" ||
+      screen === "computerScreen" ||
+      screen === "vaccineScreen"
+    ) {
+      setMap(map1);
+    } else if (
+      screen === "urdyScreen" ||
+      screen === "afterUrdy" ||
+      screen === "goingBack" ||
+      screen === "beforeCredit" ||
+      screen === "creditScreen" ||
+      screen === "lastScreen"
+    ) {
+      setMap(map4);
+    } else {
+      setMap(map3);
+    }
   }, [screen]);
 
   let currentScreen;
@@ -107,7 +144,15 @@ function App() {
       );
       break;
     case "vaccineScreen":
-      currentScreen = <VaccineScreen onNext={() => setScreen("mainScreen")} />;
+      currentScreen = (
+        <VaccineScreen onNext={() => setScreen("entranceScreen")} />
+      );
+      break;
+    case "entranceScreen":
+      currentScreen = <EntranceScreen onNext={() => setScreen("firstQuiz")} />;
+      break;
+    case "firstQuiz":
+      currentScreen = <FirstQuiz onNext={() => setScreen("mainScreen")} />;
       break;
     case "mainScreen":
       currentScreen = <MainScreen onNext={() => setScreen("urdyScreen")} />;
@@ -127,10 +172,19 @@ function App() {
       break;
       */
     case "urdyScreen":
-      currentScreen = <UrdyScreen onNext={() => setScreen("goingBack")} />;
+      currentScreen = <UrdyScreen onNext={() => setScreen("afterUrdy")} />;
+      break;
+    case "afterUrdy":
+      currentScreen = <AfterUrdy onNext={() => setScreen("goingBack")} />;
       break;
     case "goingBack":
-      currentScreen = <GoingBack onNext={() => setScreen("lastScreen")} />;
+      currentScreen = <GoingBack onNext={() => setScreen("beforeCredit")} />;
+      break;
+    case "beforeCredit":
+      currentScreen = <BeforeCredit onNext={() => setScreen("creditScreen")} />;
+      break;
+    case "creditScreen":
+      currentScreen = <CreditScreen onNext={() => setScreen("lastScreen")} />;
       break;
     case "lastScreen":
       currentScreen = <LastScreen onNext={() => setScreen("startScreen")} />;
@@ -146,13 +200,19 @@ function App() {
 
   return (
     <div className="mobile">
-      <div
-        className="corner-text"
-        onClick={() => {
-          setScreen("startScreen");
-        }}
-      >
-        UglyWorld in_BUG
+      <div className="corner-text" onClick={() => setScreen("startScreen")}>
+        <span>UglyWorld in_BUG</span>
+      </div>
+      <div className="map-container">
+        <div
+          onClick={() => {
+            setMapVisible((prev) => !prev);
+          }}
+          className="map-text"
+        >
+          map
+        </div>
+        {mapVisible && <img className="map-image" src={map} alt="Map" />}
       </div>
       {currentScreen}
     </div>

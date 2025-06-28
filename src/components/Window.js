@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./window.css";
+import mouseClick from "../assets/sounds/mouse_click.ogg";
 
 function Window({
   parentRef,
@@ -215,6 +216,7 @@ function Window({
           onClick={(e) => {
             e.stopPropagation();
             onClose && onClose();
+            new Audio(mouseClick).play();
           }}
         >
           X

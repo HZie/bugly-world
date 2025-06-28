@@ -15,6 +15,8 @@ import Buttons from "../../components/Buttons";
 import error from "../../assets/sounds/error sound.ogg";
 import shutdown from "../../assets/sounds/shut down.ogg";
 import Submits from "../../components/Submits";
+import computerStartAudio from "../../assets/sounds/computer start.ogg";
+import mouseClick from "../../assets/sounds/mouse_click.ogg";
 
 function ComputerScreen({ onNext }) {
   const [fadeIn, setFadeIn] = useState("");
@@ -22,10 +24,20 @@ function ComputerScreen({ onNext }) {
   const [windowIndices, setWindowIndices] = useState([]);
   const [clickDisabled, setClickDisabled] = useState(false);
 
+  const [answer, setAnswer] = useState("");
+
   //로그인용
   const { setAgent } = useAgent();
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+
+  /*
+  const [soundEnabled, setSoundEnabled] = useState(true);
+
+  if (soundEnabled) {
+    computerStartAudio.play();
+    setSoundEnabled(false);
+  }*/
 
   async function handleLoginSubmit(e) {
     e.preventDefault();
@@ -62,7 +74,7 @@ function ComputerScreen({ onNext }) {
       title: "UglyWorld in_BUG",
       content: (
         <>
-          <span>요원이십니까?</span>
+          <span>당신은 요원이십니까?</span>
           <div>
             <Buttons onClick={handleClick}>예</Buttons>
             <Buttons onClick={handleClose}>아니오</Buttons>
@@ -74,7 +86,35 @@ function ComputerScreen({ onNext }) {
       title: "UglyWorld in_BUG",
       content: (
         <>
-          <span>요원 코드를 입력해주세요.</span>
+          <span>
+            요원증 안에 적힌
+            <br />
+            틀린 글자는 무엇인가요?
+            <br />
+            (그대로 적어주세요.)
+          </span>
+          <form onSubmit={handleAnswerSubmit}>
+            <input
+              value={answer}
+              className="computer-input"
+              onChange={(e) => {
+                setAnswer(e.target.value);
+              }}
+            />
+            <Submits value="정답" />
+          </form>
+        </>
+      ),
+    },
+    {
+      title: "UglyWorld in_BUG",
+      content: (
+        <>
+          <span>
+            요원 코드를
+            <br />
+            입력해주세요.
+          </span>
           <form onSubmit={handleLoginSubmit}>
             <input
               type="password"
@@ -107,7 +147,10 @@ function ComputerScreen({ onNext }) {
       title: "UglyWorld in_BUG",
       content: (
         <>
-          백신 프로그램을 가동합니다. <br />
+          백신 프로그램을
+          <br />
+          가동합니다.
+          <br />
           강제종료하지 마세요.
           <br />
           (잠금화면 포함)
@@ -181,6 +224,17 @@ function ComputerScreen({ onNext }) {
       // 마지막 창의 인덱스를 그대로 추가하여 복제 효과를 줌.
       const lastIndex = windowIndices[windowIndices.length - 1];
       setWindowIndices((prev) => [...prev, lastIndex]);
+    }
+  }
+
+  function handleAnswerSubmit(e) {
+    new Audio(mouseClick).play();
+    e.preventDefault();
+    const normalized = answer.trim().toLowerCase();
+    if (normalized.includes("brith")) {
+      handleClick();
+    } else {
+      console.log("정답이 아닙니다.");
     }
   }
 

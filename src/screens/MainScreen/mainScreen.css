@@ -1,5 +1,7 @@
 .main-screen {
-  background-color: #005fbd;
+  background-image: url(../../assets/images/main_background.jpeg);
+  background-size: cover;
+  background-position: center;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -266,10 +268,6 @@
   box-shadow: inset 1px 1px 2px #555;
 }
 
-.quiz-modal > span {
-  font-size: 3vh;
-}
-
 .cool-icon {
   font-size: 2.5vh;
   position: absolute;
@@ -327,12 +325,18 @@
 
 .final-icon {
   position: absolute;
-  font-size: 10vh;
-  bottom: 5vh;
+  width: 9vh;
+  height: 9vh;
+  bottom: 8vh;
   right: 5vh;
   animation: blink 0.8s step-start 5;
   cursor: pointer;
   z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7vh;
+  flex-direction: column;
 }
 
 @keyframes blink {
@@ -347,4 +351,47 @@
 
 .quiz-answer-input {
   font-size: 2vh;
+}
+
+.urdy-icon {
+  height: 9vh;
+  width: auto;
+  display: block;
+}
+
+.final-icon__text {
+  font-size: 3vh;
+  color: white;
+  bottom: -3vh;
+  position: absolute;
+  text-shadow: 1px 1px black;
+}
+
+.bug_background {
+  background-color: rgb(227, 20, 20);
+}
+
+.quiz-content,
+.story-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quiz-content > pre,
+.story-content > pre {
+  font-size: 2.5vh;
+}
+
+.quiz-content > .quiz-title {
+  font-size: 3vh;
+}
+
+.story-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.quizImage {
+  width: 50%;
 }

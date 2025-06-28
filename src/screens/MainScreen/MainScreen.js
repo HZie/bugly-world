@@ -7,6 +7,9 @@ import "./mainScreen.css";
 import Window from "../../components/Window";
 import Buttons from "../../components/Buttons";
 import quizData from "../../assets/data/quizzes.json";
+import storyData from "../../assets/data/stories.json";
+
+import urdyIcon from "../../assets/images/urdy_icon.png";
 
 // Sound
 import error from "../../assets/sounds/error sound.ogg";
@@ -14,21 +17,56 @@ import portion from "../../assets/sounds/portion.ogg";
 import success from "../../assets/sounds/complete.ogg";
 import warning from "../../assets/sounds/warning.ogg";
 import computerStart from "../../assets/sounds/computer start.ogg";
+import hmm from "../../assets/sounds/hmm.ogg";
+import mouseClick from "../../assets/sounds/mouse_click.ogg";
 
 // folder
 import activatedImg from "../../assets/images/activated-folder.png";
 import inactivatedImg from "../../assets/images/inactivated-folder.png";
 
+// images
+import img1 from "../../assets/images/arts/5.png";
+import img2 from "../../assets/images/arts/6.png";
+import img3 from "../../assets/images/arts/7.png";
+import img4 from "../../assets/images/arts/8.png";
+import img5 from "../../assets/images/arts/9.png";
+import img6 from "../../assets/images/arts/10.png";
+import img7 from "../../assets/images/arts/11.png";
+import img8 from "../../assets/images/arts/12.png";
+import img9 from "../../assets/images/arts/13.png";
+import img10 from "../../assets/images/arts/14.png";
+import img11 from "../../assets/images/arts/15.png";
+import img12 from "../../assets/images/arts/16.png";
+import img13 from "../../assets/images/arts/17.png";
+
+const imageMap = {
+  img1: img1,
+  img2: img2,
+  img3: img3,
+  img4: img4,
+  img5: img5,
+  img6: img6,
+  img7: img7,
+  img8: img8,
+  img9: img9,
+  img10: img10,
+  img11: img11,
+  img12: img12,
+  img13: img13,
+};
 function MainScreen({ onNext }) {
   const [fadeIn, setFadeIn] = useState("");
-  const [clickDisabled, setClickDisabled] = useState(false);
+  //const [clickDisabled, setClickDisabled] = useState(false);
   const { setAgent, skippedCount, setSkippedCount } = useAgent();
   const [windows, setWindows] = useState([]);
   const [visibleFolderIndex, setVisibleFolderIndex] = useState(0);
-  const [bugRemovalIndex, setBugRemovalIndex] = useState(0);
+  //const [bugRemovalIndex, setBugRemovalIndex] = useState(0);
   const [solvedLevels, setSolvedLevels] = useState({});
   const [currentLevel, setCurrentLevel] = useState(1);
+  // New state for currentChapter
+  const [currentChapter, setCurrentChapter] = useState(1);
   const [minesweeperVisible, setMinesweeperVisible] = useState(false);
+  const [storyVisible, setStoryVisible] = useState(false);
   const [grid, setGrid] = useState([]);
   const [mineCount, setMineCount] = useState(0);
   const [flagIndex, setFlagIndex] = useState(0);
@@ -37,6 +75,8 @@ function MainScreen({ onNext }) {
   const [showHint, setShowHint] = useState(false);
   const [quizVisible, setQuizVisible] = useState(false);
   const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [currentStory, setCurrentStory] = useState(null);
+  const [storyIndex, setStoryIndex] = useState(0);
   const [showWrongMessage, setShowWrongMessage] = useState(false);
   const [gameState, setGameState] = useState("angry");
   const [skippedFlags, setSkippedFlags] = useState([]);
@@ -49,6 +89,17 @@ function MainScreen({ onNext }) {
   // Ref for warning audio
   const warningAudioRef = useRef(null);
 
+  // Toggle state for final icon
+  const [finalIconToggle, setFinalIconToggle] = useState(true);
+
+  useEffect(() => {
+    if (Object.keys(solvedLevels).length !== 4) return;
+    const interval = setInterval(() => {
+      setFinalIconToggle((prev) => !prev);
+    }, 500);
+    return () => clearInterval(interval);
+  }, [solvedLevels]);
+
   // Play computer start audio once on mount
   useEffect(() => {
     const audio = new Audio(computerStart);
@@ -56,6 +107,7 @@ function MainScreen({ onNext }) {
     audio.play();
   }, []);
 
+  /*
   const bugCount = 150;
   const bugDataRef = useRef(
     Array.from({ length: bugCount }, () => ({
@@ -83,17 +135,18 @@ function MainScreen({ onNext }) {
       );
     })
     .filter(Boolean);
-
+*/
   const screenRef = useRef(null);
 
   const se_error = new Audio(error);
 
+  /*
   function createWindowContent(label) {
     return {
       title: "UglyWorld in_BUG",
       content: <div>{label} 내용입니다.</div>,
     };
-  }
+  }*/
 
   useEffect(() => {
     const fadeTimeout = setTimeout(() => {
@@ -183,11 +236,12 @@ function MainScreen({ onNext }) {
   }
 
   function handleMinesweeperSuccess(level, resultState) {
+    /*
     setBugRemovalIndex((prev) =>
       level === 4
         ? bugCount
         : Math.min(prev + Math.floor(bugCount / 8), bugCount)
-    );
+    );*/
     setVisibleFolderIndex((prev) => Math.max(prev, level));
 
     // If this level was skipped at any point, always record "hmm"
@@ -215,20 +269,30 @@ function MainScreen({ onNext }) {
   }
 
   function onSuccess(state) {
-    console.log("Minesweeper 성공!");
+    // console.log("Minesweeper 성공!");
     handleMinesweeperSuccess(currentLevel, state);
     setTimeout(() => {
       setShowOverlay(true);
-      new Audio(success).play();
+      if (state === "cool") {
+        new Audio(success).play();
+      } else {
+        new Audio(hmm).play();
+      }
     }, 50);
   }
 
   function handleFolderClick(label, level) {
     setShowOverlay(false);
+    new Audio(mouseClick).play();
     setCurrentLevel(level);
     setMinesweeperVisible(true);
     setSkippedThisLevel(false); // Reset skippedThisLevel when a new level starts
     setGameState("angry");
+    setStoryIndex(0);
+    const storyList = storyData.chapters[currentChapter]?.[0];
+    if (storyList) {
+      setCurrentStory(storyList);
+    }
     se_error.play();
     // If opening a window here in the future, play error sound after setWindows
   }
@@ -241,6 +305,8 @@ function MainScreen({ onNext }) {
   const [quizOpen, setQuizOpen] = useState(false);
 
   function handleCellClick(row, col) {
+    new Audio(mouseClick).play();
+
     setGrid((prevGrid) => {
       const newGrid = prevGrid.map((r) => r.map((c) => ({ ...c })));
       const clickedCell = newGrid[row][col];
@@ -252,7 +318,16 @@ function MainScreen({ onNext }) {
           setShowWrongMessage(false);
           setWrongAttempts(0);
           setShowHint(false); // Reset state
-          setQuizVisible(true); // 퀴즈 모달 열기
+
+          const storyList = storyData.chapters[currentChapter] || [];
+          if (storyList.length > 0) {
+            setStoryIndex(0);
+            setCurrentStory(storyList[0]);
+            setStoryVisible(true); // 스토리 먼저
+          } else {
+            setQuizVisible(true); // 스토리 없으면 바로 퀴즈
+          }
+
           if (wrongAttempts >= 3) setShowHint(true);
           se_error.play();
         } else {
@@ -275,8 +350,20 @@ function MainScreen({ onNext }) {
 
       const currentQuiz = levelQuizzes[flagIndex % levelQuizzes.length]; // 현재 퀴즈 선택
       const correctAnswer = currentQuiz.answer;
+      const normalizedUserAnswer = quizAnswer.trim().toLowerCase();
+      const correctAnswers = Array.isArray(correctAnswer)
+        ? correctAnswer
+        : [correctAnswer];
 
-      if (quizAnswer.trim() === correctAnswer) {
+      const isCorrect =
+        normalizedUserAnswer !== "" &&
+        correctAnswers.some(
+          (ans) =>
+            normalizedUserAnswer.includes(ans.toLowerCase()) ||
+            ans.toLowerCase().includes(normalizedUserAnswer)
+        );
+
+      if (isCorrect) {
         setShowWrongMessage(false);
         setGrid((prev) => {
           const newGrid = prev.map((r) => r.map((c) => ({ ...c })));
@@ -285,6 +372,7 @@ function MainScreen({ onNext }) {
           newGrid[cx][cy].revealed = true;
           newGrid[cx][cy].flagged = false;
           newGrid[cx][cy].potion = true;
+
           new Audio(portion).play();
 
           dirs.forEach((dx) =>
@@ -321,7 +409,9 @@ function MainScreen({ onNext }) {
         if (flagIndex + 1 === mineOrderRef.current.length) {
           onSuccess("cool");
         }
-        setQuizVisible(false); // 퀴즈 모달 자동 닫기
+        setCurrentChapter((prev) => prev + 1);
+
+        setQuizVisible(false);
       } else {
         setShowWrongMessage(true);
         setWrongAttempts((prev) => {
@@ -331,7 +421,7 @@ function MainScreen({ onNext }) {
         });
       }
     } catch (error) {
-      console.error("정답 확인 중 오류:", error);
+      //// console.error("정답 확인 중 오류:", error);
     } finally {
       setQuizAnswer("");
     }
@@ -348,6 +438,7 @@ function MainScreen({ onNext }) {
 
   // Handler for final icon click: stops audio and proceeds
   function handleFinalIconClick() {
+    new Audio(mouseClick).play();
     if (warningAudioRef.current) {
       warningAudioRef.current.pause();
       warningAudioRef.current.currentTime = 0;
@@ -355,12 +446,39 @@ function MainScreen({ onNext }) {
     onNext();
   }
 
+  // Handler for story back navigation
+  function handleStoryBack() {
+    if (storyIndex === 0) return;
+    const stories = storyData.chapters[currentChapter] || [];
+    const prevIndex = storyIndex - 1;
+    setStoryIndex(prevIndex);
+    setCurrentStory(stories[prevIndex]);
+  }
+
+  // Handler for story confirmation
+  function handleStoryConfirm() {
+    const stories = storyData.chapters[currentChapter] || [];
+    const nextIndex = storyIndex + 1;
+    if (nextIndex < stories.length) {
+      setStoryIndex(nextIndex);
+      setCurrentStory(stories[nextIndex]);
+    } else {
+      setStoryVisible(false);
+      setQuizVisible(true);
+    }
+
+    // // console.log("Current Chapter:", currentChapter);
+  }
+
   return (
-    <div className={`main-screen pre-fade ${fadeIn}`}>
-      <div className="main-screen__bug-background">
-        {bugs}
+    <div
+      className={`main-screen pre-fade ${fadeIn} ${
+        Object.keys(solvedLevels).length === 4 ? "bug_background" : ""
+      } `}
+    >
+      <div className={"main-screen__bug-background"}>
         <div className="main-screen__folders">
-          {["시간여행", "우주여행", "지구여행", "바다여행"].map(
+          {["현대 문물", "SODA POP", "ZERO VIRUS", "두 자아"].map(
             (label, index) => {
               const isActive = index <= visibleFolderIndex;
               const status = solvedLevels[index + 1];
@@ -383,7 +501,7 @@ function MainScreen({ onNext }) {
                         {status === "cool"
                           ? "😎"
                           : status === "hmm"
-                          ? "😐"
+                          ? "😰"
                           : ""}
                       </span>
                     )}
@@ -396,9 +514,15 @@ function MainScreen({ onNext }) {
         </div>
         {Object.keys(solvedLevels).length === 4 && (
           <div className="final-icon" onClick={handleFinalIconClick}>
-            ⚠️
+            {finalIconToggle ? (
+              "⚠️"
+            ) : (
+              <img src={urdyIcon} alt="URDY icon" className="urdy-icon" />
+            )}
+            <span className="final-icon__text">Error</span>
           </div>
         )}
+
         {minesweeperVisible && (
           <Window
             title={`Minesweeper Level ${currentLevel}`}
@@ -413,11 +537,11 @@ function MainScreen({ onNext }) {
                       ? "😡"
                       : gameState === "cool"
                       ? skippedThisLevel
-                        ? "😐"
+                        ? "😰"
                         : "😎"
-                      : "😐"}
+                      : "😰"}
                   </div>
-                  CURED
+                  {gameState === "hmm" ? "Anyway CURED" : "CURED"}
                 </div>
               )}
               <span className="minesweeper-header">
@@ -438,9 +562,9 @@ function MainScreen({ onNext }) {
                     ? "😡"
                     : gameState === "cool"
                     ? skippedThisLevel
-                      ? "😐"
+                      ? "😰"
                       : "😎"
-                    : "😐"}
+                    : "😰"}
                 </div>
                 <div className="number">0 0 {mineCount}</div>
               </span>
@@ -487,14 +611,52 @@ function MainScreen({ onNext }) {
             </div>
           </Window>
         )}
+
+        {storyVisible &&
+          (storyData.chapters[currentChapter]?.length || 0) > 0 && (
+            <Window
+              title="UglyWolrd in_BUG"
+              onClose={() => setStoryVisible(false)}
+              parentRef={screenRef}
+            >
+              <img
+                className="quizImage"
+                src={imageMap[currentStory?.image]}
+                alt="quiz image"
+              />
+              <br />
+              <div className="story-content">
+                <pre>{currentStory?.story}</pre>
+                <div className="story-buttons">
+                  {storyIndex > 0 && (
+                    <Buttons onClick={handleStoryBack}>이전</Buttons>
+                  )}
+                  <Buttons onClick={handleStoryConfirm}>
+                    {storyIndex + 1 <
+                    (storyData.chapters[currentChapter]?.length || 0)
+                      ? "다음"
+                      : "문제"}
+                  </Buttons>
+                </div>
+              </div>
+            </Window>
+          )}
+
         {quizVisible && (
           <Window
-            title="Quiz"
+            title={`${currentQuiz?.title || currentLevel}`}
             onClose={() => setQuizVisible(false)}
             parentRef={screenRef}
           >
             <div className="quiz-content">
-              <span>{currentQuiz.question}</span>
+              <pre className="quiz-title">{currentQuiz.title} </pre>
+              <img
+                className="quizImage"
+                src={imageMap[currentQuiz?.image]}
+                alt="quiz image"
+              />
+              <br />
+              <pre>{currentQuiz.question}</pre>
               {showWrongMessage && (
                 <div style={{ color: "red", marginTop: "5px" }}>틀렸습니다</div>
               )}
@@ -506,12 +668,9 @@ function MainScreen({ onNext }) {
                 placeholder="정답을 입력하세요"
               />
               <div className="quiz-buttons">
-                <Buttons onClick={handleSubmitanswer}>제출</Buttons>
+                <Buttons onClick={handleSubmitanswer}>정답</Buttons>
                 {wrongAttempts >= 3 && (
                   <>
-                    <div className="quiz-hint">
-                      힌트: {currentQuiz && currentQuiz.hint}
-                    </div>
                     <Buttons
                       onClick={() => {
                         // 먼저 퀴즈 모달 닫기 상태 처리
@@ -545,6 +704,22 @@ function MainScreen({ onNext }) {
                         if (nextIndex < mineOrderRef.current.length) {
                           const [nx, ny] = mineOrderRef.current[nextIndex];
                           updatedGrid[nx][ny].flagged = true;
+                          // Reveal adjacent cells
+                          const dirs = [-1, 0, 1];
+                          dirs.forEach((dx) =>
+                            dirs.forEach((dy) => {
+                              if (dx || dy) {
+                                const rx = nx + dx,
+                                  ry = ny + dy;
+                                if (
+                                  updatedGrid[rx]?.[ry] &&
+                                  !updatedGrid[rx][ry].mine
+                                ) {
+                                  updatedGrid[rx][ry].revealed = true;
+                                }
+                              }
+                            })
+                          );
                           // Don't setCurrentQuiz, setWrongAttempts, setShowHint here (no preloading quiz)
                         } else {
                           onSuccess("hmm");
@@ -560,21 +735,28 @@ function MainScreen({ onNext }) {
                     </Buttons>
                   </>
                 )}
-                <Buttons
-                  onClick={() => setQuizVisible(false)}
-                  className="quiz-close-button"
-                >
-                  닫기
-                </Buttons>
               </div>
             </div>
           </Window>
         )}
         <div className="main-screen__screen" ref={screenRef}>
           {windows.map(({ id, title, content }) => (
-            <Window key={id} title={title} onClose={() => handleClose(id)}>
-              {content}
-            </Window>
+            <div
+              key={id}
+              onMouseDown={() => {
+                setWindows((prev) => {
+                  const idx = prev.findIndex((win) => win.id === id);
+                  if (idx === -1) return prev;
+                  const updated = [...prev];
+                  const [win] = updated.splice(idx, 1);
+                  return [...updated, win];
+                });
+              }}
+            >
+              <Window title={title} onClose={() => handleClose(id)}>
+                {content}
+              </Window>
+            </div>
           ))}
         </div>
       </div>

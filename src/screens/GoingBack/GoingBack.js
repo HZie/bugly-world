@@ -16,6 +16,7 @@ const chasingAudio = new Audio(chasing);
 const TARGET_TIME = new Date();
 
 const dingAudio = new Audio(ding);
+let dingUnlocked = false;
 const computerStartAudio = new Audio(computerStart);
 computerStartAudio.loop = false;
 
@@ -68,7 +69,20 @@ function GoingBack({ onNext }) {
       if (nextTime >= TARGET_TIME) {
         chasingAudio.pause();
         chasingAudio.currentTime = 0;
-        dingAudio.play();
+        if (!dingUnlocked) {
+          dingAudio
+            .play()
+            .then(() => {
+              dingUnlocked = true;
+            })
+            .catch(() => {});
+        } else {
+          if (!dingAudio.paused) {
+            dingAudio.pause();
+            dingAudio.currentTime = 0;
+          }
+          dingAudio.play().catch(() => {});
+        }
         setTime(TARGET_TIME);
         setAccessGranted(true);
         setFlashOverlay(true);
@@ -83,8 +97,10 @@ function GoingBack({ onNext }) {
 
     return () => {
       cancelAnimationFrame(frameId);
-      dingAudio.pause();
-      dingAudio.currentTime = 0;
+      if (!dingAudio.paused) {
+        dingAudio.pause();
+        dingAudio.currentTime = 0;
+      }
     };
   }, [visible, onNext]);
 
@@ -136,18 +152,21 @@ function GoingBack({ onNext }) {
   const seconds = ss; // ss
 
   const handleClick = () => {
-    // Attempt to unlock dingAudio on mobile
-    dingAudio
-      .play()
-      .then(() => {
-        dingAudio.pause();
-        dingAudio.currentTime = 0;
-      })
-      .catch(() => {});
+    if (!dingUnlocked) {
+      dingAudio
+        .play()
+        .then(() => {
+          dingUnlocked = true;
+        })
+        .catch(() => {});
+    }
 
     if (accessGranted) {
-      dingAudio.pause();
-      dingAudio.currentTime = 0;
+      if (!dingAudio.paused) {
+        dingAudio.pause();
+        dingAudio.currentTime = 0;
+      }
+      dingAudio.play().catch(() => {});
       chasingAudio.pause();
       chasingAudio.currentTime = 0;
       computerStartAudio.pause();
@@ -159,7 +178,14 @@ function GoingBack({ onNext }) {
   };
 
   return (
-    <div className="going-back" onClick={handleClick}>
+    <div
+      className="going-back"
+      onClick={(e) => {
+        if (accessGranted) handleClick(e);
+        else e.stopPropagation();
+      }}
+      style={{ pointerEvents: accessGranted ? "auto" : "none" }}
+    >
       <div className="bg-layer" style={{ opacity: bgOpacity }} />
       <div className={`bug-hunting ${visible ? "visible" : "hidden"}`}>
         <div

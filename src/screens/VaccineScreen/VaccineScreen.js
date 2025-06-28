@@ -8,15 +8,14 @@ import "../../styles/layout.css";
 import "../../styles/typography.css";
 import warning from "../../assets/sounds/warning.ogg";
 import chasing from "../../assets/sounds/chasing.ogg";
-import computerStart from "../../assets/sounds/computer start.ogg";
+import clickSound from "../../assets/sounds/mouse_click.ogg";
 
 const chasingAudio = new Audio(chasing);
 
 const TARGET_TIME = new Date("2000-01-01T00:00:00");
 
 const warningAudio = new Audio(warning);
-const computerStartAudio = new Audio(computerStart);
-computerStartAudio.loop = false;
+let warningUnlocked = false;
 
 function VaccineScreen({ onNext }) {
   const { agent } = useAgent();
@@ -61,13 +60,21 @@ function VaccineScreen({ onNext }) {
       const progress = elapsed / 13000;
       setBgOpacity(Math.min(progress, 0.9));
 
-      if (nextTime <= TARGET_TIME) {
+      if (nextTime <= TARGET_TIME - 1) {
         chasingAudio.pause();
         chasingAudio.currentTime = 0;
-        warningAudio.play();
-        setTime(TARGET_TIME);
-        setAccessGranted(true);
-        setFlashOverlay(true);
+        warningAudio
+          .play()
+          .then(() => {
+            setAccessGranted(true);
+            setFlashOverlay(true);
+            setTime(TARGET_TIME);
+          })
+          .catch(() => {
+            setAccessGranted(true);
+            setFlashOverlay(true);
+            setTime(TARGET_TIME);
+          });
         return;
       }
 
@@ -112,23 +119,17 @@ function VaccineScreen({ onNext }) {
 
   const handleClick = () => {
     // Attempt to unlock warningAudio on mobile
-    warningAudio
-      .play()
-      .then(() => {
-        warningAudio.pause();
-        warningAudio.currentTime = 0;
-      })
-      .catch(() => {});
+    if (!warningUnlocked) {
+      warningAudio.play();
+      warningUnlocked = true;
+    }
 
     if (accessGranted) {
       warningAudio.pause();
       warningAudio.currentTime = 0;
       chasingAudio.pause();
       chasingAudio.currentTime = 0;
-      computerStartAudio.pause();
-      computerStartAudio.currentTime = 0;
 
-      computerStartAudio.play();
       onNext();
     }
   };
@@ -165,7 +166,7 @@ function VaccineScreen({ onNext }) {
           <div className="access__message">
             요원에게 권한을 부여합니다.
             <br />
-            웜홀로 입장해주십시오.
+            웜홀(통로)로 입장해주십시오.
           </div>
         )}
       </div>

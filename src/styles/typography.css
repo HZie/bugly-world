@@ -58,8 +58,8 @@ p {
 .corner-text {
   font-family: var(--font-game);
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 2%;
+  right: 5%;
   font-size: 2.3vh;
   color: rgba(255, 255, 255, 0.5);
   z-index: 9999;
@@ -77,13 +77,13 @@ p {
 }
 
 .vaccine-alert__start {
-  font-size: 6vh;
+  font-size: 5vh;
   color: white;
   -webkit-text-stroke: 1px black;
 }
 
 .vaccine-alert__vaccinate {
-  font-size: 8vh;
+  font-size: 7vh;
   -webkit-text-stroke: 1px black;
   color: #63cffa;
 }
@@ -99,4 +99,34 @@ p {
   width: 1ch;
   text-align: center;
   letter-spacing: 0.05em;
+}
+
+.map-text {
+  font-family: var(--font-game);
+  font-size: 3vh;
+  color: rgba(255, 255, 255);
+  margin: 10px 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border: 0.5px grey solid;
+  box-shadow: 2px 2px black;
+  align-self: flex-start;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: purple;
+}
+
+.map-text:active {
+  transform: translateY(2px);
+  border-top: 2% inset #555;
+  border-left: 2px inset #555;
+  border-bottom: 2px inset #aaa;
+  border-right: 2px inset #aaa;
+  background-color: #e0e0e0;
+}
+
+.map-image {
+  height: 50vh;
 }

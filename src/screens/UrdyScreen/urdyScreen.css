@@ -15,3 +15,9 @@
 .urdy-input {
   font-size: 2vh;
 }
+
+.urdy__story-buttons {
+  margin: 0;
+  padding: 0;
+  justify-self: center;
+}
