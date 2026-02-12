@@ -1,0 +1,84 @@
+/* 페이지가 살짝 밀리는(기본 margin) 이슈 방지 */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Full screen: 어떤 부모 레이아웃 영향도 안 받게 고정 */
+.redirect-screen,
+.redirect26-screen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  display: grid;
+  place-items: center;
+
+  /* 배경 이미지 */
+  background-image: var(--bg-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* 2) 창 이미지 (가운데, 반응형) */
+.redirect26-window {
+  position: relative;
+
+  /* ✅ 버튼 위치/크기(윈도우 내부 좌표) - 여기만 조정하면 됨 */
+  --btn-x: 55%; /* 0% = 왼쪽, 100% = 오른쪽 */
+  --btn-y: 50%; /* 0% = 위, 100% = 아래 */
+  --btn-w: min(280px, 60vw); /* 버튼 이미지 폭 */
+
+  /* 화면 기준으로 스케일링 */
+  width: min(640px, 86vw); /* ⬅️ 윈도우 전체 크기 살짝 축소 */
+
+  /* 높이는 이미지가 결정하도록 */
+  height: auto;
+}
+
+.redirect26-window-img {
+  width: 100%;
+  height: auto;
+  display: block;
+
+  /* 세로가 긴 화면에서도 창이 화면을 넘지 않게 */
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+/* 3) 버튼 오버레이 */
+.redirect26-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.redirect26-yes {
+  position: absolute;
+
+  /* ✅ 윈도우 내부의 특정 지점에 고정 */
+  left: var(--btn-x);
+  top: var(--btn-y);
+  transform: translate(-50%, -50%);
+
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.redirect26-yes-img {
+  width: var(--btn-w);
+  max-width: 80%;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+
+.redirect26-yes:active,
+.redirect26-yes.is-clicked {
+  transform: translate(-50%, calc(-50% + 4px));
+}
